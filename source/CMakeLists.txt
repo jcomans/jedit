@@ -11,7 +11,7 @@ find_package(Curses REQUIRED)
 include_directories(${BOOST_INCLUDE_DIR} ${CURSES_INCLUDE_DIR})
 
 set(jedit_SRC
-  main.cpp
+  src/main.cpp
   )
 
 add_executable(jedit ${jedit_SRC})
