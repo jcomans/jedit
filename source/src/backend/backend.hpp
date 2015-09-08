@@ -19,6 +19,7 @@ namespace jedit
     const CharBuffer& charBuffer() const { return charbuffer_; }
 
     void addChar(char ch) { charbuffer_.push_back(ch); }
+    void removeChar()     { charbuffer_.pop_back();    }
 
   private:
     CharBuffer charbuffer_;

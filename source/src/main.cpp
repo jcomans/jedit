@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
@@ -40,14 +41,31 @@ int main(int argc, char** argv)
 
   bool running = true;
 
+  frontend.redraw();
+
   while(running)
   {
     char ch = frontend.getChar();
 
-    if(ch == 'q')
+    if(ch == 27)
+    {
       running = false;
-
-    backend.currentBuffer().addChar(ch);
+    }
+    else if(ch == 10 || (ch>31 && ch<127) )
+    {
+      backend.currentBuffer().addChar(ch);
+    }
+    else if(ch == 7)
+    {
+      backend.currentBuffer().removeChar();
+    }
+    else
+    {
+      std::stringstream ss;
+      ss << "|" << +ch << "|";
+      for(auto c: ss.str())
+        backend.currentBuffer().addChar(c);
+    }
 
     frontend.redraw();
   }
