@@ -17,7 +17,9 @@ namespace jedit
       initscr();
       clear();
       noecho();
-      cbreak();
+      raw();
+      meta (stdscr, true);
+      intrflush (stdscr, false);
       keypad(stdscr, TRUE);
       curs_set(0);
     }
