@@ -42,7 +42,7 @@ namespace jedit
     void redraw() const
     {
       clear();
-      const Buffer::CharBuffer& buffer = backend_.currentBuffer().charBuffer();
+      const auto& buffer = backend_.currentBuffer().charBuffer();
       for(const auto& character: buffer)
         addch(character);
     }
