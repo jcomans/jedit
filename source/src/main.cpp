@@ -75,7 +75,8 @@ private:
 };
 
 
-int main(int argc, char** argv)
+//int main(int argc, char** argv)
+void fubar(int argc, char** argv)
 {
   GTKWindow gtk_window(argc, argv);
 

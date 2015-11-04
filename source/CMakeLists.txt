@@ -25,6 +25,7 @@ include_directories(
   ${CURSES_INCLUDE_DIR})
 
 set(jedit_SRC
+  src/jedit.cpp
   src/main.cpp
   src/ScintillaCore.cpp
   )
