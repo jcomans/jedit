@@ -26,6 +26,7 @@ include_directories(
 
 set(jedit_SRC
   src/main.cpp
+  src/ScintillaCore.cpp
   )
 
 add_executable(jedit ${jedit_SRC})
