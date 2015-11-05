@@ -1,37 +1,50 @@
 #include "script_engine.hpp"
-#include "backend/backend.hpp"
+
+#include "app.hpp"
+#include "editor.hpp"
 
 #include <iostream>
 #include <string>
 
-#include <ncurses.h>
-
 using namespace std;
 namespace py = boost::python;
 
-using ScriptEngine = jedit::ScriptEngine;
+namespace
+{
+  App* the_app = 0;
 
+  //App& getApp() { return *the_app; }
+  SCEditor& getEditor() { return the_app->editor(); }
+}
 
-
-
-BOOST_PYTHON_MODULE(buffer)
+BOOST_PYTHON_MODULE(jedit)
 {
   using namespace boost::python;
 
-  def<void(std::string)>("write", &write);
-  def("say_hello", &say_hello);
+  //def("app", &getApp);//, return_value_policy<reference_existing_object>());
+
+  def("editor", &getEditor, return_value_policy<reference_existing_object>());
+
+  class_<SCEditor>("Editor").
+    def("set_font", &SCEditor::setFont).
+    def("add_text", &SCEditor::addText);
   
 }
 
 ScriptEngine::ScriptEngine():
   py_context_()
 {
-  py_context_.addModule("hello", PyInit_hello);
+  py_context_.addModule("jedit", PyInit_jedit);
   py_context_.init();
   main_module_ = py::import("__main__");
   main_namespace_ = main_module_.attr("__dict__");
 
-  main_namespace_["hello"] = py::import("hello");
+  main_namespace_["jedit"] = py::import("jedit");
+}
+
+void ScriptEngine::set_app(App* app)
+{
+  the_app = app;
 }
 
 bool ScriptEngine::load(const char* file)

@@ -18,7 +18,6 @@ public:
 
     scintilla_set_id(editor_, 0);
 
-    setFont("DroidSansMono");
   }
 
   sptr_t sendMessage(unsigned int message, uptr_t wParam=0, sptr_t lParam=0)
@@ -35,6 +34,11 @@ public:
   void setFont(const char* font_name)
   {
     sendMessage(SCI_STYLESETFONT, STYLE_DEFAULT, font_name);
+  }
+
+  void addText(const char* text)
+  {
+    sendMessage(SCI_INSERTTEXT, -1, text);
   }
 
 private:
