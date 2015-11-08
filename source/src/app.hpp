@@ -12,6 +12,7 @@
 #include "buffer.hpp"
 
 #include "script_engine.hpp"
+#include "key_handler.hpp"
 
 using namespace std;
 
@@ -24,7 +25,8 @@ public:
     status_bar_widget_(nullptr),
     editor_(),
     buffers_(editor_),
-    script_engine_()
+    script_engine_(),
+    key_handler_(script_engine_)
   {
     gtk_init(&argc, &argv);
 
@@ -53,13 +55,12 @@ public:
   {
     GdkEventKey* keyevent = reinterpret_cast<GdkEventKey*>(e);
     
-    cout << "Keypress: " << keyevent->keyval << "(" << keyevent->state << ")" 
-         << (keyevent->is_modifier>0?"*":"") << endl;
-  
-    return gtk_widget_event(static_cast<GtkWidget*>(p), e);
+    App* the_app = reinterpret_cast<App*>(p);
+    return the_app->key_handler_.handle(keyevent->keyval, keyevent->state, keyevent->is_modifier);
   }
 
   SCEditor& editor() { return editor_; }
+  KeyHandler& key_handler() { return key_handler_; }
 
 private:
   void createGUI()
@@ -84,7 +85,7 @@ private:
                        GTK_SIGNAL_FUNC(&App::handleExit), 0);
 
     gtk_signal_connect(GTK_OBJECT(app_), "key_press_event",
-                       GTK_SIGNAL_FUNC(&App::handleKey), editor_widget_);
+                       GTK_SIGNAL_FUNC(&App::handleKey), this);
   }
 
 private:
@@ -97,6 +98,7 @@ private:
   BufferList buffers_;
 
   ScriptEngine script_engine_;
+  KeyHandler   key_handler_;
 };
 
 #endif /* _APP_H_ */

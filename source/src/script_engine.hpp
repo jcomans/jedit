@@ -24,6 +24,7 @@ public:
 
   void set_app(App* app);
   bool load(const char* file);
+  bool handle(const char* cmd);
   bool run(char key);
 private:
   PythonContext py_context_;

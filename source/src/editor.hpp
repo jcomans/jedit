@@ -41,6 +41,27 @@ public:
     sendMessage(SCI_INSERTTEXT, -1, text);
   }
 
+  void insertChar(char character)
+  {
+    sendMessage(SCI_ADDTEXT, 1, &character);
+    sendMessage(SCI_SCROLLCARET);
+  }
+
+  void nextLine()
+  {
+    sendMessage(SCI_LINEDOWN);
+  }
+
+  void previousLine()
+  {
+    sendMessage(SCI_LINEUP);
+  }
+
+  void newLine()
+  {
+    sendMessage(SCI_NEWLINE);
+  }
+
 private:
   ScintillaObject* editor_;
 };

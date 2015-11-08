@@ -1,28 +1,21 @@
-# import string
 
-# hello.say_hello()
-
-# def do_exit(key):
-#     hello.write('Exiting\n')
-
-# def self_insert(key):
-#     hello.write(key)
-
-# def show_character_code(key):
-#     hello.write('|{0:02x}|'.format(ord(key)))
-
-# global_key_map = {}
-# global_key_map[27] = do_exit
-
-# def handle_key(key):
-#     if key in global_key_map:
-#         global_key_map[key](key)
-#     elif key in string.printable:
-#         self_insert(key)
-#     else:
-#         show_character_code(key)
-
-editor = jedit.editor()    
+editor = jedit.editor()
+key_handler = jedit.key_handler()    
 
 editor.set_font("DroidSansMono")
 editor.add_text("\nHello world!\n")
+
+def self_insert():
+    editor.insert_char(key_handler.key_buffer())
+
+global_keymap = {}
+
+global_keymap['a'] = self_insert
+
+global_keymap['C-n'] = editor.next_line
+global_keymap['C-p'] = editor.previous_line
+global_keymap['C-j'] = editor.new_line
+
+def handle_key(cmd):
+    if cmd in global_keymap:
+        global_keymap[cmd]()
