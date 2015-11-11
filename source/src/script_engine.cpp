@@ -33,9 +33,11 @@ BOOST_PYTHON_MODULE(jedit)
     def("add_text",    &SCEditor::addText).
     def("insert_char", &SCEditor::insertChar).
 
-    def("next_line", &SCEditor::nextLine).
+    def("next_line",     &SCEditor::nextLine).
     def("previous_line", &SCEditor::previousLine).
-    def("new_line", &SCEditor::newLine);
+    def("char_left",     &SCEditor::charLeft).
+    def("char_right",    &SCEditor::charRight).
+    def("new_line",      &SCEditor::newLine);
   
   class_<KeyHandler>("KeyHandler", no_init).
     def("key_buffer", &KeyHandler::keyBuffer);

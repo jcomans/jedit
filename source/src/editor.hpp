@@ -47,6 +47,16 @@ public:
     sendMessage(SCI_SCROLLCARET);
   }
 
+  void charLeft()
+  {
+    sendMessage(SCI_CHARLEFT);
+  }
+
+  void charRight()
+  {
+    sendMessage(SCI_CHARRIGHT);
+  }
+
   void nextLine()
   {
     sendMessage(SCI_LINEDOWN);
