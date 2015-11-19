@@ -36,6 +36,11 @@ public:
     sendMessage(SCI_STYLESETFONT, STYLE_DEFAULT, font_name);
   }
 
+  void setCaretStyle(int style)
+  {
+    sendMessage(SCI_SETCARETSTYLE, style);
+  }
+
   void addText(const char* text)
   {
     sendMessage(SCI_INSERTTEXT, -1, text);
@@ -67,10 +72,32 @@ public:
     sendMessage(SCI_LINEUP);
   }
 
+  void lineStart()
+  {
+    sendMessage(SCI_HOME);
+  }
+
+  void lineEnd()
+  {
+    sendMessage(SCI_LINEEND);
+  }
+
   void newLine()
   {
     sendMessage(SCI_NEWLINE);
   }
+
+  void backSpace()
+  {
+    sendMessage(SCI_DELETEBACK);
+  }
+
+  void deleteChar()
+  {
+    sendMessage(SCI_CLEAR);
+  }
+
+
 
 private:
   ScintillaObject* editor_;
