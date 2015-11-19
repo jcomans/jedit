@@ -1,6 +1,7 @@
 
-editor = jedit.editor()
+editor      = jedit.editor()
 key_handler = jedit.key_handler()    
+buffer_list = jedit.buffer_list()
 
 editor.set_font("DroidSansMono")
 editor.set_caret_style(2)
@@ -8,6 +9,9 @@ editor.set_caret_style(2)
 def self_insert():
     for char in key_handler.key_buffer():
         editor.insert_char(char)
+
+def find_file():
+    buffer_list.find_file("CMakeCache.txt")
 
 global_keymap = {}
 
@@ -27,7 +31,8 @@ global_keymap['DOWN'] = editor.next_line
 global_keymap['BS']  = editor.backspace
 global_keymap['C-d'] = editor.delete
 
-global_keymap['C-x C-f'] = editor.char_right
+global_keymap['C-x C-f'] = find_file
+global_keymap['C-x b']   = buffer_list.switch_buffer
 
 def handle_key(cmd):
     

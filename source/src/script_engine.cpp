@@ -1,6 +1,7 @@
 #include "script_engine.hpp"
 
 #include "app.hpp"
+#include "buffer.hpp"
 #include "editor.hpp"
 #include "key_handler.hpp"
 
@@ -17,6 +18,7 @@ namespace
   //App& getApp() { return *the_app; }
   SCEditor& getEditor() { return the_app->editor(); }
   KeyHandler& getKeyHandler() { return the_app->key_handler(); }
+  BufferList& getBufferList() { return the_app->buffer_list(); }
 }
 
 BOOST_PYTHON_MODULE(jedit)
@@ -27,6 +29,7 @@ BOOST_PYTHON_MODULE(jedit)
 
   def("editor", &getEditor, return_value_policy<reference_existing_object>());
   def("key_handler", &getKeyHandler, return_value_policy<reference_existing_object>());
+  def("buffer_list", &getBufferList, return_value_policy<reference_existing_object>());
 
   class_<SCEditor>("Editor").
     def("set_font",    &SCEditor::setFont).
@@ -49,6 +52,10 @@ BOOST_PYTHON_MODULE(jedit)
   
   class_<KeyHandler>("KeyHandler", no_init).
     def("key_buffer", &KeyHandler::keyBuffer);
+
+  class_<BufferList>("BufferList", no_init).
+    def("find_file", &BufferList::findFile).
+    def("switch_buffer", &BufferList::switchBuffer);
   
 }
 

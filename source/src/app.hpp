@@ -61,6 +61,7 @@ public:
 
   SCEditor& editor() { return editor_; }
   KeyHandler& key_handler() { return key_handler_; }
+  BufferList& buffer_list() { return buffers_; }
 
 private:
   void createGUI()
