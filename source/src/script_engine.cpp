@@ -87,7 +87,8 @@ bool ScriptEngine::handle(const char* cmd)
   try
   {
     auto handle_key = main_namespace_["handle_key"];
-    handle_key(cmd);
+    auto res = handle_key(cmd);
+    return py::extract<bool>(res);
   }
   catch(py::error_already_set)
   {

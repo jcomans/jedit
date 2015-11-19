@@ -27,9 +27,18 @@ global_keymap['DOWN'] = editor.next_line
 global_keymap['BS']  = editor.backspace
 global_keymap['C-d'] = editor.delete
 
+global_keymap['C-x C-f'] = editor.char_right
+
 def handle_key(cmd):
+    
+    partial_matches = [i for i in global_keymap if i[0:len(cmd)] == cmd ]
+
     if cmd in global_keymap:
         global_keymap[cmd]()
-
+        return True
+    elif len(partial_matches) > 0:
+        return False
     else:
         self_insert()
+        
+    return True

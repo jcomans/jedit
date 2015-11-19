@@ -15,7 +15,8 @@ class KeyHandler
 public:
   KeyHandler(ScriptEngine& se):script_engine_(se) 
   {
-    state_map_[GDK_SHIFT_MASK]   = "S-";
+    state_map_[0]                = "";
+    state_map_[GDK_SHIFT_MASK]   = "";
     state_map_[GDK_LOCK_MASK]    = "L-";
     state_map_[GDK_CONTROL_MASK] = "C-";
     state_map_[GDK_MOD1_MASK]    = "M-";
@@ -62,21 +63,19 @@ public:
   {
     if(!is_modifier)
     {
-      if(!state || state==GDK_SHIFT_MASK)
-      {
-        if(key_map_.count(keyval))
-          key_buffer_ = key_map_[keyval];
-        else
-          key_buffer_ = boost::lexical_cast<std::string>(keyval);
 
-      }
+      key_buffer_ += state_map_[state];
+      key_buffer_ += key_map_.count(keyval) ? key_map_[keyval] : boost::lexical_cast<std::string>(keyval);
+
+      // If the key was handled, we reset the buffer to read a new chord, otherwise the next
+      // call will append
+      if(script_engine_.handle(key_buffer_.c_str()))
+         key_buffer_ = "";
       else
-      {
-        key_buffer_ = state_map_[state] + key_map_[keyval];
-      }
-      return script_engine_.handle(key_buffer_.c_str());
+        key_buffer_ += " ";
     }
-
+      
+      
     return true;
   }
 
