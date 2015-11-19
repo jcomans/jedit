@@ -11,7 +11,8 @@ def self_insert():
         editor.insert_char(char)
 
 def find_file():
-    buffer_list.find_file("CMakeCache.txt")
+    #buffer_list.find_file("CMakeCache.txt")
+    buffer_list.find_file("foo.txt")
 
 global_keymap = {}
 
@@ -33,6 +34,8 @@ global_keymap['C-d'] = editor.delete
 
 global_keymap['C-x C-f'] = find_file
 global_keymap['C-x b']   = buffer_list.switch_buffer
+global_keymap['C-x k']   = buffer_list.kill_buffer
+global_keymap['C-x C-s'] = buffer_list.save_file
 
 def handle_key(cmd):
     

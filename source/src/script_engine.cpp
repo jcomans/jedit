@@ -55,7 +55,10 @@ BOOST_PYTHON_MODULE(jedit)
 
   class_<BufferList>("BufferList", no_init).
     def("find_file", &BufferList::findFile).
-    def("switch_buffer", &BufferList::switchBuffer);
+    def("save_file", &BufferList::saveFile).
+    def("switch_buffer", &BufferList::switchBuffer).
+    def("kill_buffer", &BufferList::killBuffer);
+
   
 }
 

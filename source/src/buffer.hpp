@@ -65,13 +65,39 @@ public:
     }    
   }
 
+  void saveFile()
+  {
+    size_t len = editor_.sendMessage(SCI_GETLENGTH);
+    std::vector<char> buffer(len+1);
+    editor_.sendMessage(SCI_GETTEXT, buffer.size(), &buffer[0]);
+
+    auto the_file = std::ofstream(buffer_list_.back().file_path);
+    the_file.write(&buffer[0], len);
+  }
+
   void switchBuffer()
   {
     if(buffer_list_.size() > 1)
     {
       std::iter_swap(buffer_list_.rbegin(), buffer_list_.rbegin()+1);
-      std::cout << "Switching to: " << buffer_list_.back().name << std::endl;
       editor_.sendMessage(SCI_SETDOCPOINTER, 0, buffer_list_.back().document);
+    }
+  }
+
+  void killBuffer()
+  {
+    if(buffer_list_.size())
+    {
+      Buffer the_buffer = buffer_list_.back();
+      
+      buffer_list_.pop_back();
+      
+      if(buffer_list_.size())
+        editor_.sendMessage(SCI_SETDOCPOINTER, 0, buffer_list_.back().document);
+      else
+        createScratch();
+
+      editor_.sendMessage(SCI_RELEASEDOCUMENT, 0, the_buffer.document);      
     }
   }
 
