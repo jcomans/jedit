@@ -4,6 +4,7 @@
 #include "buffer.hpp"
 #include "editor.hpp"
 #include "key_handler.hpp"
+#include "minibuffer.hpp"
 
 #include <iostream>
 #include <string>
@@ -19,17 +20,18 @@ namespace
   SCEditor& getEditor() { return the_app->editor(); }
   KeyHandler& getKeyHandler() { return the_app->key_handler(); }
   BufferList& getBufferList() { return the_app->buffer_list(); }
+  MiniBuffer& getMiniBuffer() { return the_app->mini_buffer(); }
+
 }
 
 BOOST_PYTHON_MODULE(jedit)
 {
   using namespace boost::python;
 
-  //def("app", &getApp);//, return_value_policy<reference_existing_object>());
-
-  def("editor", &getEditor, return_value_policy<reference_existing_object>());
+   def("editor", &getEditor, return_value_policy<reference_existing_object>());
   def("key_handler", &getKeyHandler, return_value_policy<reference_existing_object>());
   def("buffer_list", &getBufferList, return_value_policy<reference_existing_object>());
+  def("mini_buffer", &getMiniBuffer, return_value_policy<reference_existing_object>());
 
   class_<SCEditor>("Editor").
     def("set_font",    &SCEditor::setFont).
@@ -59,7 +61,8 @@ BOOST_PYTHON_MODULE(jedit)
     def("switch_buffer", &BufferList::switchBuffer).
     def("kill_buffer", &BufferList::killBuffer);
 
-  
+  class_<MiniBuffer>("MiniBuffer", no_init).
+    def("start_capture", &MiniBuffer::startCapture);
 }
 
 ScriptEngine::ScriptEngine():
@@ -108,12 +111,12 @@ bool ScriptEngine::handle(const char* cmd)
   return true;
 }
 
-bool ScriptEngine::run(char key)
+bool ScriptEngine::call(const char* func, const char* arg)
 {
   try
   {
-    auto handle_key = main_namespace_["handle_key"];
-    handle_key(key);
+    auto function = main_namespace_[func];
+    function(arg);
   }
   catch(py::error_already_set)
   {
@@ -122,4 +125,6 @@ bool ScriptEngine::run(char key)
   }
   return true;
 }
+
+
 

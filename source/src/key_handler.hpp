@@ -12,6 +12,7 @@
 
 class KeyHandler
 {
+  
 public:
   KeyHandler(ScriptEngine& se):script_engine_(se) 
   {

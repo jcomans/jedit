@@ -13,6 +13,7 @@
 
 #include "script_engine.hpp"
 #include "key_handler.hpp"
+#include "minibuffer.hpp"
 
 using namespace std;
 
@@ -26,7 +27,8 @@ public:
     editor_(),
     buffers_(editor_),
     script_engine_(),
-    key_handler_(script_engine_)
+    key_handler_(script_engine_),
+    mini_buffer_(script_engine_)
   {
     gtk_init(&argc, &argv);
 
@@ -36,6 +38,8 @@ public:
     editor_.init(SCINTILLA(editor_widget_));
     buffers_.init();
     script_engine_.set_app(this);
+
+    mini_buffer_.init(status_bar_widget_);
 
     script_engine_.load("../data/init.py");
   }
@@ -56,12 +60,16 @@ public:
     GdkEventKey* keyevent = reinterpret_cast<GdkEventKey*>(e);
     
     App* the_app = reinterpret_cast<App*>(p);
-    return the_app->key_handler_.handle(keyevent->keyval, keyevent->state, keyevent->is_modifier);
+    if(the_app->mini_buffer_.isActive())
+      return the_app->mini_buffer_.handle(keyevent->keyval, keyevent->state, keyevent->is_modifier);
+    else
+      return the_app->key_handler_.handle(keyevent->keyval, keyevent->state, keyevent->is_modifier);
   }
 
   SCEditor& editor() { return editor_; }
   KeyHandler& key_handler() { return key_handler_; }
   BufferList& buffer_list() { return buffers_; }
+  MiniBuffer& mini_buffer() { return mini_buffer_; }
 
 private:
   void createGUI()
@@ -100,6 +108,7 @@ private:
 
   ScriptEngine script_engine_;
   KeyHandler   key_handler_;
+  MiniBuffer   mini_buffer_;
 };
 
 #endif /* _APP_H_ */
