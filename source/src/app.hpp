@@ -60,10 +60,7 @@ public:
     GdkEventKey* keyevent = reinterpret_cast<GdkEventKey*>(e);
     
     App* the_app = reinterpret_cast<App*>(p);
-    if(the_app->mini_buffer_.isActive())
-      return the_app->mini_buffer_.handle(keyevent->keyval, keyevent->state, keyevent->is_modifier);
-    else
-      return the_app->key_handler_.handle(keyevent->keyval, keyevent->state, keyevent->is_modifier);
+    return the_app->key_handler_.handle(keyevent->keyval, keyevent->state, keyevent->is_modifier);
   }
 
   SCEditor& editor() { return editor_; }

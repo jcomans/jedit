@@ -38,6 +38,7 @@ public:
     key_map_[GDK_KEY_End]       = "END";
     key_map_[GDK_KEY_Page_Up]   = "PGUP";
     key_map_[GDK_KEY_Page_Down] = "PGDN";
+    key_map_[GDK_KEY_Tab]       = "TAB";
 
     key_map_[GDK_KEY_Up]    = "UP";
     key_map_[GDK_KEY_Down]  = "DOWN";

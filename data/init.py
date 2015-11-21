@@ -1,3 +1,4 @@
+import os
 
 editor      = jedit.editor()
 key_handler = jedit.key_handler()    
@@ -7,17 +8,68 @@ mini_buffer = jedit.mini_buffer()
 editor.set_font("DroidSansMono")
 editor.set_caret_style(2)
 
-def self_insert():
-    for char in key_handler.key_buffer():
-        editor.insert_char(char)
+global_keymap = {}
+minibuf_keymap = {}
 
-def start_find_file():
-    mini_buffer.start_capture("Find file: ", "find_file")
+current_keymap    = global_keymap
+current_keytarget = editor
+
+minibuf_action = None
+
+def self_insert():
+
+    for char in key_handler.key_buffer():
+        current_keytarget.insert_char(char)
 
 def find_file(name):
     buffer_list.find_file(name)
 
-global_keymap = {}
+def start_find_file():
+
+    global minibuf_action
+    global current_keymap
+    global current_keytarget
+
+    minibuf_action    = find_file
+    current_keymap    = minibuf_keymap
+    current_keytarget = mini_buffer
+
+    mini_buffer.start_capture("Find file: ", "find_file")
+    mini_buffer.set_dynamic('./')
+
+def confirm_minibuf_action():
+
+    name = mini_buffer.get_dynamic()
+
+    minibuf_action(name)
+
+    cancel_minibuf_action()
+
+def cancel_minibuf_action():
+
+    global minibuf_action
+    global current_keymap
+    global current_keytarget
+
+    mini_buffer.cancel()
+    current_keymap    = global_keymap
+    current_keytarget = editor
+    minibuf_action    = None
+
+def complete_minibuf():
+
+    current_content = mini_buffer.get_dynamic()
+
+    directory = os.path.dirname(current_content)
+    part      = os.path.basename(current_content)
+    entries = os.listdir(directory)
+
+    completions = [ i for i in entries if i[0:len(part)] == part ]
+
+    prefix = os.path.commonprefix(completions)
+
+    mini_buffer.set_dynamic(os.path.join(directory, prefix))
+
 
 global_keymap['C-n'] = editor.next_line
 global_keymap['C-p'] = editor.previous_line
@@ -40,16 +92,21 @@ global_keymap['C-x b']   = buffer_list.switch_buffer
 global_keymap['C-x k']   = buffer_list.kill_buffer
 global_keymap['C-x C-s'] = buffer_list.save_file
 
-def handle_key(cmd):
-    
-    partial_matches = [i for i in global_keymap if i[0:len(cmd)] == cmd ]
+minibuf_keymap['BS']  = mini_buffer.backspace
+minibuf_keymap['RET'] = confirm_minibuf_action
+minibuf_keymap['C-g'] = cancel_minibuf_action
+minibuf_keymap['TAB'] = complete_minibuf
 
-    if cmd in global_keymap:
-        global_keymap[cmd]()
+def handle_key(cmd):
+
+    partial_matches = [i for i in current_keymap if i[0:len(cmd)] == cmd ]
+
+    if cmd in current_keymap:
+        current_keymap[cmd]()
         return True
-    elif len(partial_matches) > 0:
+    elif len(cmd) > 1 and len(partial_matches) > 0:
         return False
     else:
         self_insert()
-        
+
     return True

@@ -40,6 +40,29 @@ public:
     is_active_ = false;
   }
 
+  const char* getDynamic() const
+  {
+    return dynamic_.c_str();
+  }
+
+  void setDynamic(const char* dyn)
+  {
+    dynamic_ = dyn;
+    setMessage((read_only_ + dynamic_).c_str());
+  }
+
+  void backSpace()
+  {
+    dynamic_.pop_back();
+    setMessage((read_only_ + dynamic_).c_str());
+  }
+
+  void insertChar(char character)
+  {
+    dynamic_ += character;
+    setMessage((read_only_ + dynamic_).c_str());
+  }
+
   void startCapture(const char* read_only, const char* callback)
   {
     is_active_ = true;

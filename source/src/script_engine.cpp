@@ -28,41 +28,49 @@ BOOST_PYTHON_MODULE(jedit)
 {
   using namespace boost::python;
 
-   def("editor", &getEditor, return_value_policy<reference_existing_object>());
+  def("editor", &getEditor, return_value_policy<reference_existing_object>());
   def("key_handler", &getKeyHandler, return_value_policy<reference_existing_object>());
   def("buffer_list", &getBufferList, return_value_policy<reference_existing_object>());
   def("mini_buffer", &getMiniBuffer, return_value_policy<reference_existing_object>());
 
-  class_<SCEditor>("Editor").
-    def("set_font",    &SCEditor::setFont).
-    def("set_caret_style", &SCEditor::setCaretStyle).
-    def("add_text",    &SCEditor::addText).
-    def("insert_char", &SCEditor::insertChar).
+  class_<SCEditor>("Editor" , no_init).
+    def("set_font"          , &SCEditor::setFont       ).
+    def("set_caret_style"   , &SCEditor::setCaretStyle ).
+    def("add_text"          , &SCEditor::addText       ).
+    def("insert_char"       , &SCEditor::insertChar    ).
 
-    def("next_line",     &SCEditor::nextLine).
-    def("previous_line", &SCEditor::previousLine).
+    def("next_line"         , &SCEditor::nextLine      ).
+    def("previous_line"     , &SCEditor::previousLine  ).
 
-    def("line_start", &SCEditor::lineStart).
-    def("line_end", &SCEditor::lineEnd).
+    def("line_start"        , &SCEditor::lineStart     ).
+    def("line_end"          , &SCEditor::lineEnd       ).
 
-    def("char_left",     &SCEditor::charLeft).
-    def("char_right",    &SCEditor::charRight).
-    def("new_line",      &SCEditor::newLine).
+    def("char_left"         , &SCEditor::charLeft      ).
+    def("char_right"        , &SCEditor::charRight     ).
+    def("new_line"          , &SCEditor::newLine       ).
 
-    def("backspace",     &SCEditor::backSpace).
-    def("delete",        &SCEditor::deleteChar);
+    def("backspace"         , &SCEditor::backSpace     ).
+    def("delete"            , &SCEditor::deleteChar    );
   
-  class_<KeyHandler>("KeyHandler", no_init).
-    def("key_buffer", &KeyHandler::keyBuffer);
+  class_<KeyHandler>("KeyHandler" , no_init ).
+    def("key_buffer" , &KeyHandler::keyBuffer );
 
-  class_<BufferList>("BufferList", no_init).
-    def("find_file", &BufferList::findFile).
-    def("save_file", &BufferList::saveFile).
-    def("switch_buffer", &BufferList::switchBuffer).
-    def("kill_buffer", &BufferList::killBuffer);
+  class_<BufferList>("BufferList" , no_init).
+    def("find_file"     , &BufferList::findFile     ).
+    def("save_file"     , &BufferList::saveFile     ).
+    def("switch_buffer" , &BufferList::switchBuffer ).
+    def("kill_buffer"   , &BufferList::killBuffer   );
 
-  class_<MiniBuffer>("MiniBuffer", no_init).
-    def("start_capture", &MiniBuffer::startCapture);
+  class_<MiniBuffer>("MiniBuffer" , no_init).
+    def("is_active"     , &MiniBuffer::isActive     ).
+    def("set_message"   , &MiniBuffer::setMessage   ).
+    def("clear_message" , &MiniBuffer::clearMessage ).
+    def("cancel"        , &MiniBuffer::cancel       ).
+    def("get_dynamic"   , &MiniBuffer::getDynamic   ).
+    def("set_dynamic"   , &MiniBuffer::setDynamic   ).
+    def("backspace"     , &MiniBuffer::backSpace    ).
+    def("insert_char"   , &MiniBuffer::insertChar   ).
+    def("start_capture" , &MiniBuffer::startCapture );
 }
 
 ScriptEngine::ScriptEngine():
