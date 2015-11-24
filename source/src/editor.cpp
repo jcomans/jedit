@@ -86,3 +86,8 @@ void SCEditor::deleteChar()
 {
   sendMessage(SCI_CLEAR);
 }
+
+void SCEditor::undo()
+{
+  sendMessage(SCI_UNDO);
+}

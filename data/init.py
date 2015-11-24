@@ -87,6 +87,8 @@ global_keymap['DOWN'] = editor.next_line
 global_keymap['BS']  = editor.backspace
 global_keymap['C-d'] = editor.delete
 
+global_keymap['C-S-_'] = editor.undo
+
 global_keymap['C-x C-f'] = start_find_file
 global_keymap['C-x b']   = buffer_list.switch_buffer
 global_keymap['C-x k']   = buffer_list.kill_buffer

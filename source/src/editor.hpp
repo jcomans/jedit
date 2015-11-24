@@ -44,6 +44,8 @@ public:
 
   void deleteChar();
 
+  void undo();
+
 private:
   ScintillaObject* editor_;
 };

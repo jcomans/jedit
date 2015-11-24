@@ -87,6 +87,24 @@ void App::createGUI()
   gtk_widget_show_all(app_);
 }
 
+#include <iostream>
+using namespace std;
+
+int App::handleScintillaMessage(GtkWidget *, gint, SCNotification *notification, gpointer userData)
+{
+  switch(notification->nmhdr.code)
+  {
+  case(SCN_SAVEPOINTLEFT):
+    cout << "Savepoint left" << endl;
+    return 1;
+  case(SCN_SAVEPOINTREACHED):
+    cout << "Savepoint reached" << endl;
+    return 0;
+  }
+
+  return 0;
+}
+
 void App::connectSignals()
 {
   gtk_signal_connect(GTK_OBJECT(app_), "delete_event",
@@ -94,4 +112,7 @@ void App::connectSignals()
 
   gtk_signal_connect(GTK_OBJECT(app_), "key_press_event",
                      GTK_SIGNAL_FUNC(&App::handleKey), this);
+
+  gtk_signal_connect(GTK_OBJECT(editor_widget_), "sci-notify",
+                     GTK_SIGNAL_FUNC(&App::handleScintillaMessage), this);
 }

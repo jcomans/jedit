@@ -12,6 +12,9 @@ typedef _GdkEventAny GdkEventAny;
 typedef _GdkEvent GdkEvent;
 
 typedef void* gpointer;
+typedef int   gint;
+
+struct SCNotification;
 
 #include "script_engine.hpp"
 
@@ -34,6 +37,8 @@ public:
   static int handleExit(GtkWidget*w, GdkEventAny*e, gpointer p);
 
   static int handleKey(GtkWidget*w, GdkEvent* e, gpointer p);
+
+  static int handleScintillaMessage(GtkWidget *, gint, SCNotification *notification, gpointer userData);
 
   SCEditor& editor();
   KeyHandler& key_handler();

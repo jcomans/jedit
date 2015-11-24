@@ -22,6 +22,7 @@ void BufferList::createScratch()
                             editor_.sendMessage(SCI_CREATEDOCUMENT));
   editor_.sendMessage(SCI_SETDOCPOINTER, 0, buffer_list_.back().document);
   editor_.sendMessage(SCI_SETTEXT, 0, "This is your scratch buffer.\nFeel free to use for doodling.\n");
+  editor_.sendMessage(SCI_SETSAVEPOINT);
 }
 
 void BufferList::findFile(const char* file_name)
@@ -39,6 +40,7 @@ void BufferList::findFile(const char* file_name)
                                 std::istreambuf_iterator<char>() );
 
     editor_.sendMessage(SCI_SETTEXT, 0, content.c_str());
+    editor_.sendMessage(SCI_SETSAVEPOINT);
   }    
 }
 
@@ -50,6 +52,8 @@ void BufferList::saveFile()
 
   auto the_file = std::ofstream(buffer_list_.back().file_path);
   the_file.write(&buffer[0], len);
+
+  editor_.sendMessage(SCI_SETSAVEPOINT);
 }
 
 void BufferList::switchBuffer()

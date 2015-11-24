@@ -15,7 +15,8 @@ KeyHandler::KeyHandler(ScriptEngine& se):script_engine_(se)
   state_map_[GDK_CONTROL_MASK] = "C-";
   state_map_[GDK_MOD1_MASK]    = "M-";
 
-  state_map_[GDK_CONTROL_MASK|GDK_MOD1_MASK] = "C-M-";
+  state_map_[GDK_CONTROL_MASK|GDK_MOD1_MASK]  = "C-M-";
+  state_map_[GDK_CONTROL_MASK|GDK_SHIFT_MASK] = "C-S-";
 
 
   // Printable characters

@@ -50,7 +50,9 @@ BOOST_PYTHON_MODULE(jedit)
     def("new_line"          , &SCEditor::newLine       ).
 
     def("backspace"         , &SCEditor::backSpace     ).
-    def("delete"            , &SCEditor::deleteChar    );
+    def("delete"            , &SCEditor::deleteChar    ).
+
+    def("undo"              , &SCEditor::undo          );
   
   class_<KeyHandler>("KeyHandler" , no_init ).
     def("key_buffer" , &KeyHandler::keyBuffer );
