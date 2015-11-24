@@ -3,96 +3,47 @@
 
 #include <iostream>
 
-#include <gtk/gtk.h>
+struct _GtkWidget;
+struct _GdkEventAny;
+union _GdkEvent;
 
-#include <Scintilla.h>
-#include <ScintillaWidget.h>
+typedef _GtkWidget GtkWidget;
+typedef _GdkEventAny GdkEventAny;
+typedef _GdkEvent GdkEvent;
+
+typedef void* gpointer;
+
+#include "script_engine.hpp"
 
 #include "editor.hpp"
 #include "buffer.hpp"
-
-#include "script_engine.hpp"
-#include "key_handler.hpp"
 #include "minibuffer.hpp"
+
+#include "key_handler.hpp"
+
 
 using namespace std;
 
 class App
 {
 public:
-  App(int argc=0, char** argv=0):
-    app_(nullptr),
-    editor_widget_(nullptr),
-    status_bar_widget_(nullptr),
-    editor_(),
-    buffers_(editor_),
-    script_engine_(),
-    key_handler_(script_engine_),
-    mini_buffer_(script_engine_)
-  {
-    gtk_init(&argc, &argv);
+  App(int argc=0, char** argv=0);
 
-    createGUI();
-    connectSignals();
+  void run();
 
-    editor_.init(SCINTILLA(editor_widget_));
-    buffers_.init();
-    script_engine_.set_app(this);
+  static int handleExit(GtkWidget*w, GdkEventAny*e, gpointer p);
 
-    mini_buffer_.init(status_bar_widget_);
+  static int handleKey(GtkWidget*w, GdkEvent* e, gpointer p);
 
-    script_engine_.load("../data/init.py");
-  }
-
-  void run()
-  {
-    gtk_main();
-  }
-
-  static int handleExit(GtkWidget*w, GdkEventAny*e, gpointer p) 
-  {
-    gtk_main_quit();
-    return 1;
-  }
-
-  static int handleKey(GtkWidget*w, GdkEvent* e, gpointer p)
-  {
-    GdkEventKey* keyevent = reinterpret_cast<GdkEventKey*>(e);
-    
-    App* the_app = reinterpret_cast<App*>(p);
-    return the_app->key_handler_.handle(keyevent->keyval, keyevent->state, keyevent->is_modifier);
-  }
-
-  SCEditor& editor() { return editor_; }
-  KeyHandler& key_handler() { return key_handler_; }
-  BufferList& buffer_list() { return buffers_; }
-  MiniBuffer& mini_buffer() { return mini_buffer_; }
+  SCEditor& editor();
+  KeyHandler& key_handler();
+  BufferList& buffer_list();
+  MiniBuffer& mini_buffer();
 
 private:
-  void createGUI()
-  {
-    app_ = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  void createGUI();
 
-    GtkWidget* boxMain = gtk_vbox_new(FALSE, 0);
-    gtk_container_add(GTK_CONTAINER(app_), boxMain);
-
-    editor_widget_ = scintilla_new();
-    status_bar_widget_ = gtk_statusbar_new();
-
-    gtk_box_pack_start(GTK_BOX(boxMain), editor_widget_, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(boxMain), status_bar_widget_, FALSE, FALSE, 0);
-
-    gtk_widget_show_all(app_);
-  }
-
-  void connectSignals()
-  {
-    gtk_signal_connect(GTK_OBJECT(app_), "delete_event",
-                       GTK_SIGNAL_FUNC(&App::handleExit), 0);
-
-    gtk_signal_connect(GTK_OBJECT(app_), "key_press_event",
-                       GTK_SIGNAL_FUNC(&App::handleKey), this);
-  }
+  void connectSignals();
 
 private:
   GtkWidget* app_;
@@ -100,12 +51,14 @@ private:
   GtkWidget* editor_widget_;
   GtkWidget* status_bar_widget_;
 
+  ScriptEngine script_engine_;
+
   SCEditor   editor_;
   BufferList buffers_;
+  MiniBuffer mini_buffer_;
 
-  ScriptEngine script_engine_;
-  KeyHandler   key_handler_;
-  MiniBuffer   mini_buffer_;
+  KeyHandler key_handler_;
+  
 };
 
 #endif /* _APP_H_ */

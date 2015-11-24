@@ -26,7 +26,12 @@ include_directories(
 
 set(jedit_SRC
   src/jedit.cpp
+  src/app.cpp
+  src/editor.cpp
+  src/buffer.cpp
+  src/key_handler.cpp
   src/script_engine.cpp
+  src/minibuffer.cpp
   )
 
 add_executable(jedit ${jedit_SRC})

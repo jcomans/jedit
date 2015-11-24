@@ -2,105 +2,56 @@
 #define _EDITOR_H_
 
 #include <Scintilla.h>
-#include <ScintillaWidget.h>
+
+struct _ScintillaObject;
+typedef _ScintillaObject ScintillaObject;;
 
 class SCEditor
 {
 public:
-  SCEditor(): 
-    editor_(nullptr) 
-  {
-  }
+  SCEditor();
 
-  void init(ScintillaObject* editor)
-  {
-    editor_ = editor;
+  void init(ScintillaObject* editor);
 
-    scintilla_set_id(editor_, 0);
-
-  }
-
-  sptr_t sendMessage(unsigned int message, uptr_t wParam=0, sptr_t lParam=0)
-  {
-    return scintilla_send_message(editor_, message, wParam, lParam);
-  }
+  sptr_t sendMessage(unsigned int message, uptr_t wParam=0, sptr_t lParam=0);
 
   template <typename T>
-  sptr_t sendMessage(unsigned int message, uptr_t wParam=0, T* lParam=0)
-  {
-    return sendMessage(message, wParam, reinterpret_cast<sptr_t>(lParam));
-  }
+  sptr_t sendMessage(unsigned int message, uptr_t wParam=0, T* lParam=0);
 
-  void setFont(const char* font_name)
-  {
-    sendMessage(SCI_STYLESETFONT, STYLE_DEFAULT, font_name);
-  }
+  void setFont(const char* font_name);
 
-  void setCaretStyle(int style)
-  {
-    sendMessage(SCI_SETCARETSTYLE, style);
-  }
+  void setCaretStyle(int style);
 
-  void addText(const char* text)
-  {
-    sendMessage(SCI_INSERTTEXT, -1, text);
-  }
+  void addText(const char* text);
 
-  void insertChar(char character)
-  {
-    sendMessage(SCI_ADDTEXT, 1, &character);
-    sendMessage(SCI_SCROLLCARET);
-  }
+  void insertChar(char character);
 
-  void charLeft()
-  {
-    sendMessage(SCI_CHARLEFT);
-  }
+  void charLeft();
 
-  void charRight()
-  {
-    sendMessage(SCI_CHARRIGHT);
-  }
+  void charRight();
 
-  void nextLine()
-  {
-    sendMessage(SCI_LINEDOWN);
-  }
+  void nextLine();
 
-  void previousLine()
-  {
-    sendMessage(SCI_LINEUP);
-  }
+  void previousLine();
 
-  void lineStart()
-  {
-    sendMessage(SCI_HOME);
-  }
+  void lineStart();
 
-  void lineEnd()
-  {
-    sendMessage(SCI_LINEEND);
-  }
+  void lineEnd();
 
-  void newLine()
-  {
-    sendMessage(SCI_NEWLINE);
-  }
+  void newLine();
 
-  void backSpace()
-  {
-    sendMessage(SCI_DELETEBACK);
-  }
+  void backSpace();
 
-  void deleteChar()
-  {
-    sendMessage(SCI_CLEAR);
-  }
-
-
+  void deleteChar();
 
 private:
   ScintillaObject* editor_;
 };
+
+template <typename T>
+sptr_t SCEditor::sendMessage(unsigned int message, uptr_t wParam, T* lParam)
+{
+  return sendMessage(message, wParam, reinterpret_cast<sptr_t>(lParam));
+}
 
 #endif /* _EDITOR_H_ */
