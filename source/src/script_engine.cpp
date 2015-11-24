@@ -119,20 +119,4 @@ bool ScriptEngine::handle(const char* cmd)
   return true;
 }
 
-bool ScriptEngine::call(const char* func, const char* arg)
-{
-  try
-  {
-    auto function = main_namespace_[func];
-    function(arg);
-  }
-  catch(py::error_already_set)
-  {
-    PyErr_Print();
-    return false;
-  }
-  return true;
-}
-
-
 

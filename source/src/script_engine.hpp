@@ -26,7 +26,6 @@ public:
   bool load(const char* file);
   bool handle(const char* cmd);
 
-  bool call(const char* func, const char* arg);
 private:
   PythonContext py_context_;
 
