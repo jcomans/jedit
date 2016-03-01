@@ -16,7 +16,8 @@ namespace
 {
   App* the_app = 0;
 
-  //App& getApp() { return *the_app; }
+  void do_exit() { App::handleExit(0,0,0); }
+
   SCEditor& getEditor() { return the_app->editor(); }
   KeyHandler& getKeyHandler() { return the_app->key_handler(); }
   BufferList& getBufferList() { return the_app->buffer_list(); }
@@ -27,6 +28,8 @@ namespace
 BOOST_PYTHON_MODULE(jedit)
 {
   using namespace boost::python;
+
+  def("exit", &do_exit);
 
   def("editor", &getEditor, return_value_policy<reference_existing_object>());
   def("key_handler", &getKeyHandler, return_value_policy<reference_existing_object>());

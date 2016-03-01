@@ -94,6 +94,8 @@ global_keymap['C-x b']   = buffer_list.switch_buffer
 global_keymap['C-x k']   = buffer_list.kill_buffer
 global_keymap['C-x C-s'] = buffer_list.save_file
 
+global_keymap['C-x C-c'] = jedit.exit
+
 minibuf_keymap['BS']  = mini_buffer.backspace
 minibuf_keymap['RET'] = confirm_minibuf_action
 minibuf_keymap['C-g'] = cancel_minibuf_action
