@@ -2,7 +2,17 @@
 
 #include <gtk/gtk.h>
 
+#include <SciLexer.h>
 #include <ScintillaWidget.h>
+
+#include <iostream>
+using std::cout;
+using std::endl;
+
+namespace
+{
+  const int SCE_STYLE_GREEN = 11;
+}
 
 SCEditor::SCEditor(): 
   editor_(nullptr) 
@@ -14,6 +24,39 @@ void SCEditor::init(ScintillaObject* editor)
   editor_ = editor;
 
   scintilla_set_id(editor_, 0);
+
+  sendMessage(SCI_SETLEXER, SCLEX_CONTAINER);
+
+  
+  sendMessage(SCI_STYLESETFORE, STYLE_DEFAULT, 0x000000);
+  sendMessage(SCI_STYLESETBACK, STYLE_DEFAULT, 0xffffff);
+  sendMessage(SCI_STYLECLEARALL);
+
+  sendMessage(SCI_STYLESETFORE, SCE_STYLE_GREEN, 0x00ff00);
+}
+
+void SCEditor::handleStyle(const int end_pos)
+{
+  const auto start_pos   = sendMessage(SCI_GETENDSTYLED);
+  const auto line_number = sendMessage(SCI_LINEFROMPOSITION, start_pos);
+  const auto line_pos    = sendMessage(SCI_POSITIONFROMLINE, line_number);
+
+  const auto line_length = sendMessage(SCI_LINELENGTH, line_number);
+
+  if(line_length>0)
+  {
+    const auto first_char = static_cast<char>(sendMessage(SCI_GETCHARAT, line_pos));
+
+    sendMessage(SCI_STARTSTYLING, start_pos, 0);
+
+    switch(first_char)
+    {
+    case '#':
+      sendMessage(SCI_SETSTYLING, line_length, SCE_STYLE_GREEN);
+    default:
+      sendMessage(SCI_SETSTYLING, line_length, STYLE_DEFAULT);
+    }
+  }
 }
 
 sptr_t SCEditor::sendMessage(unsigned int message, uptr_t wParam, sptr_t lParam)
@@ -24,6 +67,7 @@ sptr_t SCEditor::sendMessage(unsigned int message, uptr_t wParam, sptr_t lParam)
 void SCEditor::setFont(const char* font_name)
 {
   sendMessage(SCI_STYLESETFONT, STYLE_DEFAULT, font_name);
+  sendMessage(SCI_STYLESETFONT, SCE_STYLE_GREEN, font_name);
 }
 
 void SCEditor::setCaretStyle(int style)

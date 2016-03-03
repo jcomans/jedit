@@ -13,6 +13,8 @@ public:
 
   void init(ScintillaObject* editor);
 
+  void handleStyle(int end_pos);
+
   sptr_t sendMessage(unsigned int message, uptr_t wParam=0, sptr_t lParam=0);
 
   template <typename T>
