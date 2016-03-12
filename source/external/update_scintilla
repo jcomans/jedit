@@ -1,0 +1,70 @@
+#!/usr/bin/python3
+
+import difflib
+from os import listdir, mkdir
+from os.path import join, isdir, isfile, splitext
+import shutil
+import sys
+
+sync_dirs = [
+    'gtk',
+    'include',
+    'lexers',
+    'lexlib',
+    'scripts',
+    'src',
+]
+
+file_types = [
+    '.c',
+    '.h',
+    '.cxx',
+    '.py',
+]
+
+# Check command line argument
+if not len(sys.argv) == 2:
+    print("I need a path to the scintilla source dir")
+    sys.exit(1)
+
+# The root path of the source dir
+source_root = sys.argv[1]
+dest_root = 'scintilla'
+
+print('scintilla source path: ' + source_root)
+
+# Parse all dirs that need to be synced
+for directory in sync_dirs:
+    print("Parsing '{}'".format(directory))
+
+    source_path = join(source_root, directory)
+    dest_path   = join(dest_root,   directory)
+
+    # Check if the source path exists
+    if not isdir(source_path):
+        print("No folder '{}' found in source dir".format(directory))
+
+    # Check if the destination path exists
+    if not isdir(dest_path):
+        print("Creating destination folder '{}'".format(directory))
+        mkdir(dest_path)
+
+    # Find relevant files in both source and dest
+    source_files = [f for f in listdir(source_path) if isfile(join(source_path,f)) and splitext(join(source_path,f))[-1] in file_types ]
+    dest_files   = [f for f in listdir(dest_path)   if isfile(join(dest_path,f))   and splitext(join(dest_path,f))[-1]   in file_types ]
+
+    # Check the diff
+    differ    = difflib.Differ()
+    diff_list = list(differ.compare(sorted(dest_files), sorted(source_files)))
+    diffs = [x for x in diff_list if not x[0] == ' ']
+
+    if(len(diffs)):
+       print('Contents of current directory differ:')
+       print('\n'.join(diffs))
+
+    # Copy the files
+    for filename in source_files:
+        shutil.copy(join(source_path, filename), join(dest_path, filename))
+
+    
+    
