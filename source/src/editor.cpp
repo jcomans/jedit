@@ -1,5 +1,7 @@
 #include "editor.hpp"
 
+#include <algorithm>
+
 #include <gtk/gtk.h>
 
 #include <SciLexer.h>
@@ -35,26 +37,34 @@ void SCEditor::init(ScintillaObject* editor)
   sendMessage(SCI_STYLESETFORE, SCE_STYLE_GREEN, 0x00ff00);
 }
 
-void SCEditor::handleStyle(const int end_pos)
+void SCEditor::handleStyle(const unsigned int end_pos)
 {
-  const auto start_pos   = sendMessage(SCI_GETENDSTYLED);
-  const auto line_number = sendMessage(SCI_LINEFROMPOSITION, start_pos);
-  const auto line_pos    = sendMessage(SCI_POSITIONFROMLINE, line_number);
+  using uint = unsigned int;
 
-  const auto line_length = sendMessage(SCI_LINELENGTH, line_number);
+  const auto start_pos   = static_cast<uint>(sendMessage(SCI_GETENDSTYLED));
+  const auto line_number = static_cast<uint>(sendMessage(SCI_LINEFROMPOSITION, start_pos));
+  const auto line_start  = static_cast<uint>(sendMessage(SCI_POSITIONFROMLINE, line_number));
 
-  if(line_length>0)
+  const auto line_length = static_cast<uint>(sendMessage(SCI_LINELENGTH, line_number));
+
+  const auto line_end = line_start + line_length;
+
+  const auto style_length = std::min(end_pos, line_end) - start_pos;
+
+  if(style_length>0)
   {
-    const auto first_char = static_cast<char>(sendMessage(SCI_GETCHARAT, line_pos));
+    const auto first_char = static_cast<char>(sendMessage(SCI_GETCHARAT, line_start));
 
     sendMessage(SCI_STARTSTYLING, start_pos, 0);
 
     switch(first_char)
     {
     case '#':
-      sendMessage(SCI_SETSTYLING, line_length, SCE_STYLE_GREEN);
+      sendMessage(SCI_SETSTYLING, style_length, SCE_STYLE_GREEN);
+      break;
     default:
-      sendMessage(SCI_SETSTYLING, line_length, STYLE_DEFAULT);
+      sendMessage(SCI_SETSTYLING, style_length, STYLE_DEFAULT);
+      break;
     }
   }
 }
