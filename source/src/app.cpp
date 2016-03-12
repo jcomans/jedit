@@ -100,10 +100,10 @@ int App::handleScintillaMessage(GtkWidget *, gint, SCNotification *notification,
   case(SCN_SAVEPOINTREACHED):
     cout << "Savepoint reached" << endl;
     return 0;
-  case(SCN_STYLENEEDED):
-    const unsigned int end_pos = reinterpret_cast<SCNotification*>(&notification->nmhdr)->position;
-    static_cast<App*>(userData)->editor_.handleStyle(end_pos);
-    return 0;
+  // case(SCN_STYLENEEDED):
+  //   const unsigned int end_pos = reinterpret_cast<SCNotification*>(&notification->nmhdr)->position;
+  //   static_cast<App*>(userData)->editor_.handleStyle(end_pos);
+  //   return 0;
   }
 
   return 0;

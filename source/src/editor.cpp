@@ -74,6 +74,19 @@ sptr_t SCEditor::sendMessage(unsigned int message, uptr_t wParam, sptr_t lParam)
   return scintilla_send_message(editor_, message, wParam, lParam);
 }
 
+const char* SCEditor::getText()
+{
+  size_t len = sendMessage(SCI_GETLENGTH);
+  tmp_buffer_.resize(len);
+  sendMessage(SCI_GETTEXT, tmp_buffer_.size()+1, &tmp_buffer_[0]);
+  return tmp_buffer_.c_str();
+}
+
+unsigned int SCEditor::currentPos()
+{
+  return static_cast<unsigned int>(sendMessage(SCI_GETCURRENTPOS));
+}
+
 void SCEditor::setFont(const char* font_name)
 {
   sendMessage(SCI_STYLESETFONT, STYLE_DEFAULT, font_name);
@@ -94,6 +107,16 @@ void SCEditor::insertChar(char character)
 {
   sendMessage(SCI_ADDTEXT, 1, &character);
   sendMessage(SCI_SCROLLCARET);
+}
+
+void SCEditor::insertText(unsigned int pos, const char* text)
+{
+  sendMessage(SCI_INSERTTEXT, pos, text);
+}
+
+void SCEditor::deleteRange(unsigned int pos, unsigned int length)
+{
+  sendMessage(SCI_DELETERANGE, pos, length);
 }
 
 void SCEditor::charLeft()

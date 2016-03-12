@@ -1,5 +1,8 @@
 import os
 
+from subprocess import Popen, PIPE, STDOUT
+import xml.etree.ElementTree as xmlet
+
 editor      = jedit.editor()
 key_handler = jedit.key_handler()    
 buffer_list = jedit.buffer_list()
@@ -15,6 +18,8 @@ current_keymap    = global_keymap
 current_keytarget = editor
 
 minibuf_action = None
+
+buffer_list.find_file("app.cpp")
 
 def self_insert():
 
@@ -70,6 +75,27 @@ def complete_minibuf():
 
     mini_buffer.set_dynamic(os.path.join(directory, prefix))
 
+def format_buffer():
+    contents = editor.get_text()
+    
+    pipe = Popen(['clang-format','-output-replacements-xml','-style=LLVM'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+    
+    clang_stdout = pipe.communicate(input=contents.encode('UTF-8'))[0]
+
+    repl_xml = clang_stdout.decode()
+
+    root = xmlet.fromstring(repl_xml)
+
+    replacements = [ (child.attrib['offset'],child.attrib['length'],child.text) for child in root ]
+
+    for o, l, r in reversed(replacements):
+        offset = int(o)
+        length = int(l)
+        repl   = r
+
+        editor.delete_range(offset, length)
+        editor.insert_text(offset, repl)
+
 
 global_keymap['C-n'] = editor.next_line
 global_keymap['C-p'] = editor.previous_line
@@ -93,6 +119,8 @@ global_keymap['C-x C-f'] = start_find_file
 global_keymap['C-x b']   = buffer_list.switch_buffer
 global_keymap['C-x k']   = buffer_list.kill_buffer
 global_keymap['C-x C-s'] = buffer_list.save_file
+
+global_keymap['C-M-\\'] = format_buffer
 
 global_keymap['C-x C-c'] = jedit.exit
 

@@ -2,6 +2,7 @@
 #define _EDITOR_H_
 
 #include <Scintilla.h>
+#include <string>
 
 struct _ScintillaObject;
 typedef _ScintillaObject ScintillaObject;;
@@ -20,6 +21,10 @@ public:
   template <typename T>
   sptr_t sendMessage(unsigned int message, uptr_t wParam=0, T* lParam=0);
 
+  const char* getText();
+
+  unsigned int currentPos();
+
   void setFont(const char* font_name);
 
   void setCaretStyle(int style);
@@ -27,6 +32,10 @@ public:
   void addText(const char* text);
 
   void insertChar(char character);
+
+  void insertText(unsigned int pos, const char* text);
+
+  void deleteRange(unsigned int pos, unsigned int length);
 
   void charLeft();
 
@@ -50,6 +59,7 @@ public:
 
 private:
   ScintillaObject* editor_;
+  std::string tmp_buffer_;
 };
 
 template <typename T>
