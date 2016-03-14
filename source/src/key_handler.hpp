@@ -14,12 +14,14 @@ public:
   
   bool handle(unsigned int keyval, unsigned int state, bool is_modifier);
 
-  std::string keyBuffer() const;
+  const char* keyBuffer() const;
 
 private:
   typedef std::map<unsigned int, std::string> Mapping;
 
   ScriptEngine& script_engine_;
+
+  unsigned int state_mask_;
 
   Mapping state_map_;
   Mapping key_map_;
