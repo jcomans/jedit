@@ -16,7 +16,7 @@ namespace
 {
   App* the_app = 0;
 
-  void do_exit() { App::handleExit(0,0,0); }
+  void do_exit() { the_app->exit(); }
 
   SCEditor& getEditor() { return the_app->editor(); }
   KeyHandler& getKeyHandler() { return the_app->key_handler(); }

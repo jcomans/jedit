@@ -4,6 +4,14 @@
 
 #include <ScintillaWidget.h>
 
+namespace
+{
+int handleExit( GtkWidget* w, GdkEventAny* e, gpointer p );
+int handleKey( GtkWidget* w, GdkEvent* e, gpointer p );
+int handleScintillaMessage( GtkWidget*, gint, SCNotification* notification,
+                            gpointer userData );
+}
+
 App::App(int argc, char** argv):
   app_(nullptr),
 
@@ -37,18 +45,9 @@ void App::run()
   gtk_main();
 }
 
-int App::handleExit(GtkWidget*w, GdkEventAny*e, gpointer p) 
+void App::exit()
 {
   gtk_main_quit();
-  return 1;
-}
-
-int App::handleKey(GtkWidget*w, GdkEvent* e, gpointer p)
-{
-  GdkEventKey* keyevent = reinterpret_cast<GdkEventKey*>(e);
-    
-  App* the_app = reinterpret_cast<App*>(p);
-  return the_app->key_handler_.handle(keyevent->keyval, keyevent->state, keyevent->is_modifier);
 }
 
 SCEditor& App::editor() 
@@ -87,36 +86,45 @@ void App::createGUI()
   gtk_widget_show_all(app_);
 }
 
-#include <iostream>
-using namespace std;
-
-int App::handleScintillaMessage(GtkWidget *, gint, SCNotification *notification, gpointer userData)
-{
-  switch(notification->nmhdr.code)
-  {
-  case(SCN_SAVEPOINTLEFT):
-    cout << "Savepoint left" << endl;
-    return 1;
-  case(SCN_SAVEPOINTREACHED):
-    cout << "Savepoint reached" << endl;
-    return 0;
-  // case(SCN_STYLENEEDED):
-  //   const unsigned int end_pos = reinterpret_cast<SCNotification*>(&notification->nmhdr)->position;
-  //   static_cast<App*>(userData)->editor_.handleStyle(end_pos);
-  //   return 0;
-  }
-
-  return 0;
-}
-
 void App::connectSignals()
 {
   gtk_signal_connect(GTK_OBJECT(app_), "delete_event",
-                     GTK_SIGNAL_FUNC(&App::handleExit), 0);
+                     GTK_SIGNAL_FUNC(&handleExit), this);
 
   gtk_signal_connect(GTK_OBJECT(app_), "key_press_event",
-                     GTK_SIGNAL_FUNC(&App::handleKey), this);
+                     GTK_SIGNAL_FUNC(&handleKey), this);
 
   gtk_signal_connect(GTK_OBJECT(editor_widget_), "sci-notify",
-                     GTK_SIGNAL_FUNC(&App::handleScintillaMessage), this);
+                     GTK_SIGNAL_FUNC(&handleScintillaMessage), this);
+}
+
+namespace
+{
+  int handleExit(GtkWidget*w, GdkEventAny*e, gpointer p) 
+  {
+    App* the_app = reinterpret_cast<App*>(p);
+    the_app->exit();
+    return 1;
+  }
+
+  int handleKey(GtkWidget*w, GdkEvent* e, gpointer p)
+  {
+    GdkEventKey* keyevent = reinterpret_cast<GdkEventKey*>(e);
+    
+    App* the_app = reinterpret_cast<App*>(p);
+    return the_app->key_handler().handle(keyevent->keyval, keyevent->state, keyevent->is_modifier);
+  }
+
+  int handleScintillaMessage(GtkWidget *, gint, SCNotification *notification, gpointer userData)
+  {
+    switch(notification->nmhdr.code)
+    {
+    case(SCN_SAVEPOINTLEFT):
+      return 1;            
+    case(SCN_SAVEPOINTREACHED):
+      return 1;
+    }
+
+    return 0;
+  }
 }

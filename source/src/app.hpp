@@ -1,8 +1,6 @@
 #ifndef _APP_H_
 #define _APP_H_
 
-#include <iostream>
-
 struct _GtkWidget;
 struct _GdkEventAny;
 union _GdkEvent;
@@ -25,8 +23,6 @@ struct SCNotification;
 #include "key_handler.hpp"
 
 
-using namespace std;
-
 class App
 {
 public:
@@ -34,11 +30,7 @@ public:
 
   void run();
 
-  static int handleExit(GtkWidget*w, GdkEventAny*e, gpointer p);
-
-  static int handleKey(GtkWidget*w, GdkEvent* e, gpointer p);
-
-  static int handleScintillaMessage(GtkWidget *, gint, SCNotification *notification, gpointer userData);
+  void exit();
 
   SCEditor& editor();
   KeyHandler& key_handler();
