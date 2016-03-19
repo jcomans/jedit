@@ -1,5 +1,7 @@
 import jedit
 
+import util
+
 import os
 
 mini_buffer = jedit.mini_buffer()
@@ -10,12 +12,9 @@ def find_file(name):
 
 def start_find_file():
 
-    jedit.minibuf_action    = find_file
-    jedit.minibuf_completer = complete_filename
-    jedit.current_keymap    = jedit.minibuf_keymap
-    jedit.current_keytarget = mini_buffer
+    util.start_minibuf_capture(find_file, complete_filename)
 
-    mini_buffer.start_capture("Find file: ", "find_file")
+    mini_buffer.start_capture("Find file: ")
     mini_buffer.set_dynamic('./')
 
 def complete_filename():

@@ -25,19 +25,20 @@ struct GTKGui::Pimpl
   GtkWidget* app_widget;
   GtkWidget* editor_widget;
   GtkWidget* status_bar_widget;
+  GtkWidget* mini_buffer_widget;
   KeyEventCallback       key_event_callback;
   SCNotificationCallback scnotification_callback;
 
-  Pimpl(int argc, char** argv, GtkWidget* app, GtkWidget* edit, GtkWidget* status):
+  Pimpl(int argc, char** argv, GtkWidget* app, GtkWidget* edit, GtkWidget* status, GtkWidget* mini):
     context(argc, argv), 
-    app_widget(app), editor_widget(edit), status_bar_widget(status),
+    app_widget(app), editor_widget(edit), status_bar_widget(status), mini_buffer_widget(mini),
     key_event_callback(), scnotification_callback()
   {
   }
 };
 
 GTKGui::GTKGui(int argc, char** argv):
-  pimpl_(new Pimpl(argc, argv, nullptr, nullptr, nullptr))
+  pimpl_(new Pimpl(argc, argv, nullptr, nullptr, nullptr, nullptr))
                    
 {
   pimpl_->app_widget = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -46,10 +47,12 @@ GTKGui::GTKGui(int argc, char** argv):
   gtk_container_add(GTK_CONTAINER(pimpl_->app_widget), boxMain);
 
   pimpl_->editor_widget     = scintilla_new();
-  pimpl_->status_bar_widget = gtk_statusbar_new();
+  pimpl_->status_bar_widget  = gtk_label_new("");
+  pimpl_->mini_buffer_widget = gtk_statusbar_new();
 
   gtk_box_pack_start(GTK_BOX(boxMain), pimpl_->editor_widget,     TRUE,  TRUE,  0);
-  gtk_box_pack_start(GTK_BOX(boxMain), pimpl_->status_bar_widget, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(boxMain), pimpl_->status_bar_widget,  FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(boxMain), pimpl_->mini_buffer_widget, FALSE, FALSE, 0);
 
   scintilla_set_id(reinterpret_cast<ScintillaObject*>(pimpl_->editor_widget), 0);
 
@@ -89,13 +92,18 @@ Gui::ScintillaSender GTKGui::scintillaSender()
 void GTKGui::setMinibufferMessage(const char* message)
 {
   clearMinibufferMessage();
-  gtk_statusbar_push(reinterpret_cast<GtkStatusbar*>(pimpl_->status_bar_widget), 0, message);
+  gtk_statusbar_push(reinterpret_cast<GtkStatusbar*>(pimpl_->mini_buffer_widget), 0, message);
 }
 
 void GTKGui::clearMinibufferMessage()
 {
-  gtk_statusbar_remove_all(reinterpret_cast<GtkStatusbar*>(pimpl_->status_bar_widget), 0);
+  gtk_statusbar_remove_all(reinterpret_cast<GtkStatusbar*>(pimpl_->mini_buffer_widget), 0);
 }  
+
+void GTKGui::setStatusBar(const char* text)
+{
+  gtk_label_set_text(reinterpret_cast<GtkLabel*>(pimpl_->status_bar_widget), text);
+}
 
 bool GTKGui::registerKeyEventCallback(KeyEventCallback kecb)
 {

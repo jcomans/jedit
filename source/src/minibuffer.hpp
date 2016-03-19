@@ -26,7 +26,7 @@ public:
 
   void insertChar(char character);
 
-  void startCapture(const char* read_only, const char* callback);
+  void startCapture(const char* read_only);
 
 private:
   GuiPtr gui_;
@@ -34,8 +34,6 @@ private:
 
   std::string read_only_;
   std::string dynamic_;
-
-  std::string callback_;
 };
 
 #endif /* _MINIBUFFER_H_ */

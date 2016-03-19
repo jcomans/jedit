@@ -5,7 +5,9 @@
 SCEditor::SCEditor(Gui::ScintillaSender sci_sender): 
   sci_sender_(sci_sender)
 {
-  
+  sendMessage(SCI_SETWRAPMODE, SC_WRAP_CHAR);
+  sendMessage(SCI_SETMARGINWIDTHN, 0, 32);
+  sendMessage(SCI_SETMARGINTYPEN, 0, SC_MARGIN_NUMBER);
 }
 
 sptr_t SCEditor::sendMessage(unsigned int message, uptr_t wParam, sptr_t lParam)

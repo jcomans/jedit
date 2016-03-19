@@ -31,6 +31,9 @@ public:
   virtual void setMinibufferMessage(const char* message) =0;
   virtual void clearMinibufferMessage() =0;
 
+  // Status bar
+  virtual void setStatusBar(const char* text) =0;
+
   // Callback system
   using NoArgCallback          = std::function<int()>;
   using KeyEventCallback       = std::function<int(KeyEvent)>;

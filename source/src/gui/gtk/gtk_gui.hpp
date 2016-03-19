@@ -18,6 +18,7 @@ public:
   void setMinibufferMessage(const char* message);
   void clearMinibufferMessage();
   
+  void setStatusBar(const char* text);
 
   bool registerKeyEventCallback(KeyEventCallback );
   bool registerSCNotificationCallback(SCNotificationCallback );

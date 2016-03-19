@@ -1,5 +1,6 @@
 import jedit
 
+import buffer_handling
 import clang
 import file_handling
 import minibuffer
@@ -29,9 +30,9 @@ def load_default_keymap():
     jedit.global_keymap['C-S-_'] = editor.undo
 
     jedit.global_keymap['C-x C-f'] = file_handling.start_find_file
-    jedit.global_keymap['C-x b']   = buffer_list.switch_buffer
-    jedit.global_keymap['C-x k']   = buffer_list.kill_buffer
-    jedit.global_keymap['C-x C-s'] = buffer_list.save_file
+    jedit.global_keymap['C-x b']   = buffer_handling.start_switch_buffer
+    jedit.global_keymap['C-x k']   = buffer_handling.start_kill_buffer
+    jedit.global_keymap['C-x C-s'] = buffer_handling.start_save_buffer
 
     jedit.global_keymap['C-M-\\'] = clang.format_buffer
 

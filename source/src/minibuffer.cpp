@@ -52,10 +52,9 @@ void MiniBuffer::insertChar(char character)
   setMessage((read_only_ + dynamic_).c_str());
 }
 
-void MiniBuffer::startCapture(const char* read_only, const char* callback)
+void MiniBuffer::startCapture(const char* read_only)
 {
   is_active_ = true;
   read_only_ = read_only;
-  callback_  = callback;
   setMessage((read_only_ + dynamic_).c_str());
 }
