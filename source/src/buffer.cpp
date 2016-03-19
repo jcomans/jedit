@@ -9,6 +9,7 @@
 BufferList::BufferList(SCEditor& editor):
   editor_(editor)
 {
+  createScratch();
 }
 
 void BufferList::init()

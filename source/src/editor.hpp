@@ -1,18 +1,13 @@
 #ifndef _EDITOR_H_
 #define _EDITOR_H_
 
-#include <Scintilla.h>
+#include "gui.hpp"
 #include <string>
-
-struct _ScintillaObject;
-typedef _ScintillaObject ScintillaObject;;
 
 class SCEditor
 {
 public:
-  SCEditor();
-
-  void init(ScintillaObject* editor);
+  SCEditor(GuiPtr gui);
 
   sptr_t sendMessage(unsigned int message, uptr_t wParam=0, sptr_t lParam=0);
 
@@ -56,7 +51,7 @@ public:
   void undo();
 
 private:
-  ScintillaObject* editor_;
+  GuiPtr gui_;
   std::string tmp_buffer_;
 };
 

@@ -2,26 +2,15 @@
 
 #include <algorithm>
 
-#include <gtk/gtk.h>
-
-#include <SciLexer.h>
-#include <ScintillaWidget.h>
-
-SCEditor::SCEditor(): 
-  editor_(nullptr) 
+SCEditor::SCEditor(GuiPtr gui): 
+  gui_(gui)
 {
-}
-
-void SCEditor::init(ScintillaObject* editor)
-{
-  editor_ = editor;
-
-  scintilla_set_id(editor_, 0);
+  
 }
 
 sptr_t SCEditor::sendMessage(unsigned int message, uptr_t wParam, sptr_t lParam)
 {
-  return scintilla_send_message(editor_, message, wParam, lParam);
+  return gui_->sendEditor(message, wParam, lParam);
 }
 
 const char* SCEditor::getText()

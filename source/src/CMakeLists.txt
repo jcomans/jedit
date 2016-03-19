@@ -29,13 +29,13 @@ set(jedit_SRC
   key_handler.cpp
   script_engine.cpp
   minibuffer.cpp
+  gtk_gui.cpp
   )
 
 add_executable(jedit ${jedit_SRC})
 
 target_link_libraries(jedit
   scintilla
-  #${CMAKE_SOURCE_DIR}/lib/scintilla.a
   ${GTK2_LIBRARIES}
   ${PYTHON_LIBRARIES}
   ${Boost_LIBRARIES}

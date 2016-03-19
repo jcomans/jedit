@@ -4,6 +4,8 @@
 #include <map>
 #include <string>
 
+#include "gui.hpp"
+
 class ScriptEngine;
 
 class KeyHandler
