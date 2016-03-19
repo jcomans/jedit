@@ -1,5 +1,5 @@
 #include "app.hpp"
-#include "gui_factory.hpp"
+#include "gui/gui_factory.hpp"
 
 
 App::App(int argc, char** argv):

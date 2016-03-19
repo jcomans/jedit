@@ -1,8 +1,8 @@
 #ifndef _GTK_GUI_H_
 #define _GTK_GUI_H_
 
-#include "gui.hpp"
-#include "util.hpp"
+#include "../gui.hpp"
+#include "../../util.hpp"
 
 class GTKGui: public Gui
 {

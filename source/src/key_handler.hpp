@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-#include "gui.hpp"
+#include "gui/gui.hpp"
 
 class ScriptEngine;
 

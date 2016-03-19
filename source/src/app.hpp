@@ -9,7 +9,7 @@
 
 #include "key_handler.hpp"
 
-#include "gui.hpp"
+#include "gui/gui.hpp"
 
 class App
 {

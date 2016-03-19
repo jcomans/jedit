@@ -1,6 +1,6 @@
 #include "gtk_gui.hpp"
 
-#include "gui_factory.hpp"
+#include "../gui_factory.hpp"
 
 #include <gtk/gtk.h>
 #include <Scintilla.h>

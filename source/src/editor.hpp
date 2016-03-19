@@ -1,7 +1,7 @@
 #ifndef _EDITOR_H_
 #define _EDITOR_H_
 
-#include "gui.hpp"
+#include "gui/gui.hpp"
 #include <string>
 
 class SCEditor

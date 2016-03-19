@@ -29,7 +29,7 @@ set(jedit_SRC
   key_handler.cpp
   script_engine.cpp
   minibuffer.cpp
-  gtk_gui.cpp
+  gui/gtk/gtk_gui.cpp
   )
 
 add_executable(jedit ${jedit_SRC})
