@@ -34,9 +34,21 @@ public:
 
   void charRight();
 
+  void wordLeft();
+
+  void wordRight();
+
   void nextLine();
 
   void previousLine();
+
+  void pageDown();
+
+  void pageUp();
+
+  void documentStart();
+
+  void documentEnd();
 
   void lineStart();
 

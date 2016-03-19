@@ -15,9 +15,17 @@ def load_default_keymap():
     jedit.global_keymap['C-p'] = editor.previous_line
     jedit.global_keymap['C-f'] = editor.char_right
     jedit.global_keymap['C-b'] = editor.char_left
+    jedit.global_keymap['M-f'] = editor.word_right
+    jedit.global_keymap['M-b'] = editor.word_left
     jedit.global_keymap['C-j'] = editor.new_line
     jedit.global_keymap['C-a'] = editor.line_start
     jedit.global_keymap['C-e'] = editor.line_end
+
+    jedit.global_keymap['C-v'] = editor.page_down
+    jedit.global_keymap['M-v'] = editor.page_up
+
+    jedit.global_keymap['C-HOME'] = editor.doc_start
+    jedit.global_keymap['C-END']  = editor.doc_end
 
 
     jedit.global_keymap['RET']  = editor.new_line

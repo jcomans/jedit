@@ -21,11 +21,19 @@ void exportEditor()
     def("next_line"       , &SCEditor::nextLine      ).
     def("previous_line"   , &SCEditor::previousLine  ).
 
+    def("page_down"       , &SCEditor::pageDown      ).
+    def("page_up"         , &SCEditor::pageUp        ).
+
+    def("doc_start"       , &SCEditor::documentStart ).
+    def("doc_end"         , &SCEditor::documentEnd   ).
+
     def("line_start"      , &SCEditor::lineStart     ).
     def("line_end"        , &SCEditor::lineEnd       ).
 
     def("char_left"       , &SCEditor::charLeft      ).
     def("char_right"      , &SCEditor::charRight     ).
+    def("word_left"       , &SCEditor::wordLeft      ).
+    def("word_right"      , &SCEditor::wordRight     ).
     def("new_line"        , &SCEditor::newLine       ).
 
     def("backspace"       , &SCEditor::backSpace     ).

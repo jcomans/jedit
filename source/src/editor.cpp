@@ -69,6 +69,16 @@ void SCEditor::charRight()
   sendMessage(SCI_CHARRIGHT);
 }
 
+void SCEditor::wordLeft()
+{
+  sendMessage(SCI_WORDLEFT);
+}
+
+void SCEditor::wordRight()
+{
+  sendMessage(SCI_WORDRIGHT);
+}
+
 void SCEditor::nextLine()
 {
   sendMessage(SCI_LINEDOWN);
@@ -78,6 +88,27 @@ void SCEditor::previousLine()
 {
   sendMessage(SCI_LINEUP);
 }
+
+void SCEditor::pageDown()
+{
+  sendMessage(SCI_PAGEDOWN);
+}
+
+void SCEditor::documentStart()
+{
+  sendMessage(SCI_DOCUMENTSTART);
+}
+
+void SCEditor::documentEnd()
+{
+  sendMessage(SCI_DOCUMENTEND);
+}
+
+void SCEditor::pageUp()
+{
+  sendMessage(SCI_PAGEUP);
+}
+
 
 void SCEditor::lineStart()
 {
