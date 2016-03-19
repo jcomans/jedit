@@ -79,9 +79,11 @@ void GTKGui::exit()
   gtk_main_quit();
 }
 
-sptr_t GTKGui::sendEditor(unsigned int message, uptr_t wParam, sptr_t lParam)
+Gui::ScintillaSender GTKGui::scintillaSender()
 {
-  return scintilla_send_message(reinterpret_cast<ScintillaObject*>(pimpl_->editor_widget), message, wParam, lParam);
+  return std::bind(&scintilla_send_message, 
+                   reinterpret_cast<ScintillaObject*>(pimpl_->editor_widget),
+                   std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 }
 
 void GTKGui::setMinibufferMessage(const char* message)

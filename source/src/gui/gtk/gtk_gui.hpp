@@ -13,7 +13,7 @@ public:
   void run();
   void exit();
 
-  sptr_t sendEditor(unsigned int message, uptr_t wParam=0, sptr_t lParam=0);
+  ScintillaSender scintillaSender();
 
   void setMinibufferMessage(const char* message);
   void clearMinibufferMessage();

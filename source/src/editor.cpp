@@ -2,15 +2,15 @@
 
 #include <algorithm>
 
-SCEditor::SCEditor(GuiPtr gui): 
-  gui_(gui)
+SCEditor::SCEditor(Gui::ScintillaSender sci_sender): 
+  sci_sender_(sci_sender)
 {
   
 }
 
 sptr_t SCEditor::sendMessage(unsigned int message, uptr_t wParam, sptr_t lParam)
 {
-  return gui_->sendEditor(message, wParam, lParam);
+  return sci_sender_(message, wParam, lParam);
 }
 
 const char* SCEditor::getText()

@@ -23,11 +23,11 @@ public:
   virtual void exit() =0;
 
   // Editor communication
-  virtual sptr_t sendEditor(unsigned int message, uptr_t wParam=0, sptr_t lParam=0) =0;
+  using ScintillaSender = std::function<sptr_t(unsigned int, uptr_t, sptr_t)>;
+  virtual ScintillaSender scintillaSender() =0;
 
-  template <typename T>
-  sptr_t sendEditor(unsigned int message, uptr_t wParam=0, T* lParam=0);
 
+  // Mini-buffer management
   virtual void setMinibufferMessage(const char* message) =0;
   virtual void clearMinibufferMessage() =0;
 
@@ -40,12 +40,6 @@ public:
   virtual bool registerSCNotificationCallback(SCNotificationCallback ) = 0;
   
 };
-
-template <typename T>
-sptr_t Gui::sendEditor(unsigned int message, uptr_t wParam, T* lParam)
-{
-  return sendEditor(message, wParam, reinterpret_cast<sptr_t>(lParam));
-}
 
 using GuiPtr = std::shared_ptr<Gui>;
 

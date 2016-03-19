@@ -8,7 +8,7 @@ App::App(int argc, char** argv):
 
   script_engine_(),
 
-  editor_(gui_),
+  editor_(gui_->scintillaSender()),
   mini_buffer_(gui_),
 
   key_handler_(script_engine_),

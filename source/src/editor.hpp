@@ -7,7 +7,7 @@
 class SCEditor
 {
 public:
-  SCEditor(GuiPtr gui);
+  SCEditor(Gui::ScintillaSender sci_sender);
 
   sptr_t sendMessage(unsigned int message, uptr_t wParam=0, sptr_t lParam=0);
 
@@ -51,7 +51,7 @@ public:
   void undo();
 
 private:
-  GuiPtr gui_;
+  Gui::ScintillaSender sci_sender_;
   std::string tmp_buffer_;
 };
 
