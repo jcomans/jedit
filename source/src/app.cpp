@@ -1,10 +1,10 @@
 #include "app.hpp"
+#include "gui_factory.hpp"
 
-#include "gtk_gui.hpp"
 
 App::App(int argc, char** argv):
 
-  gui_(std::make_shared<GTKGui>(argc, argv)),
+  gui_(GUIFactory::Create(argc, argv)),
 
   script_engine_(),
 
