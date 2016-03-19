@@ -1,6 +1,8 @@
 #ifndef _SCRIPT_ENGINE_H_
 #define _SCRIPT_ENGINE_H_
 
+#include <string>
+
 #include <boost/python.hpp>
 
 class App;
@@ -11,7 +13,13 @@ public:
   PythonContext() {}
   template<class T>
   void addModule(const char* name, T init_func) { PyImport_AppendInittab(name, init_func); }
-  void init()      { Py_Initialize(); }
+  void init()      
+  { 
+    Py_Initialize();
+    std::wstring path(Py_GetPath());
+    path += L":../data";
+    PySys_SetPath(path.c_str());
+  }
   ~PythonContext() { Py_Finalize();   }
 };
 
@@ -31,6 +39,7 @@ private:
 
   boost::python::object main_module_;
   boost::python::object main_namespace_;
+
 };
 
 #endif /* _SCRIPT_ENGINE_H_ */

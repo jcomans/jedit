@@ -16,7 +16,6 @@ namespace
   KeyHandler& getKeyHandler() { return the_app->key_handler(); }
   BufferList& getBufferList() { return the_app->buffer_list(); }
   MiniBuffer& getMiniBuffer() { return the_app->mini_buffer(); }
-
 }
 
 
@@ -37,6 +36,13 @@ BOOST_PYTHON_MODULE(jedit)
   exportKeyHandler();
   exportBuffer();
   exportMiniBuffer();
+
+  scope().attr("global_keymap")     = py::dict();
+  scope().attr("minibuf_keymap")    = py::dict();
+  scope().attr("minibuf_action")    = py::object();
+  scope().attr("minibuf_completer") = py::object();
+  scope().attr("current_keymap")    = py::object();
+  scope().attr("current_keytarget") = py::object();
 }
 
 ScriptEngine::ScriptEngine():
@@ -47,8 +53,6 @@ ScriptEngine::ScriptEngine():
 
   main_module_    = py::import("__main__");
   main_namespace_ = main_module_.attr("__dict__");
-
-  main_namespace_["jedit"] = py::import("jedit");
 }
 
 void ScriptEngine::set_app(App* app)
