@@ -30,6 +30,10 @@ set(jedit_SRC
   script_engine.cpp
   minibuffer.cpp
   gui/gtk/gtk_gui.cpp
+  python/buffer_module.cpp
+  python/editor_module.cpp
+  python/key_handler_module.cpp
+  python/minibuffer_module.cpp
   )
 
 add_executable(jedit ${jedit_SRC})
