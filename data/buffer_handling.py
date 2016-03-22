@@ -20,7 +20,9 @@ def start_kill_buffer():
     
     util.start_minibuf_capture(kill_buffer, None)
 
-    jedit.mini_buffer().start_capture("Kill buffer?");
+    buffer_name = buffer_list.current().name()
+
+    jedit.mini_buffer().start_capture("Kill buffer (default {}): ".format(buffer_name));
 
 def save_buffer(scratch):
     

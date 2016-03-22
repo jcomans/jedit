@@ -16,5 +16,14 @@ void exportBuffer()
     def("find_file"     , &BufferList::findFile     ).
     def("save_file"     , &BufferList::saveFile     ).
     def("switch_buffer" , &BufferList::switchBuffer ).
-    def("kill_buffer"   , &BufferList::killBuffer   );
+    def("kill_buffer"   , &BufferList::killBuffer   ).
+    def("current"       , &BufferList::current, return_value_policy<reference_existing_object>());
+
+  bool (Buffer::*p_modified)() const = &Buffer::modified;
+
+  class_<Buffer>("Buffer", no_init).
+    def("name", &Buffer::name ).
+    def("file_path", &Buffer::filePath ).
+    def("modified", p_modified);
+    
 }

@@ -8,16 +8,26 @@ class SCEditor;
 
 #include <Scintilla.h>
 
-struct Buffer
+class Buffer
 {
-  std::string name;
-  std::string file_path;
-  sptr_t      document;
-
+public:
   Buffer(const std::string& nm="", const std::string& fp="", sptr_t doc=0):
-    name(nm), file_path(fp), document(doc)
+    name_(nm), file_path_(fp), document_(doc), modified_(false)
   {
   }
+
+  const char* name()     const { return name_.c_str();      }
+  const char* filePath() const { return file_path_.c_str(); }
+  sptr_t      document() const { return document_;          }
+
+  bool modified() const { return modified_; }
+  void modified(bool is_modified) { modified_ = is_modified; }
+
+private:
+  std::string name_;
+  std::string file_path_;
+  sptr_t      document_;
+  bool        modified_;
 };
 
 class BufferList
@@ -36,6 +46,8 @@ public:
   void switchBuffer();
 
   void killBuffer();
+
+  Buffer& current();
 
 private:
   SCEditor& editor_;
