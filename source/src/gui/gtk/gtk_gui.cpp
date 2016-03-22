@@ -16,12 +16,23 @@ int handleScintillaMessage( GtkWidget*, gint, SCNotification* notification,
 
 struct GTKContext
 {
-  GTKContext(int argc, char** argv) { gtk_init(&argc, &argv); }
+  GTKContext(int argc, char** argv) 
+  { 
+    gdk_threads_init();
+    gtk_init(&argc, &argv); 
+  }
+};
+
+struct GDKThreadLocker
+{
+  GDKThreadLocker() { gdk_threads_enter(); }
+  ~GDKThreadLocker(){ gdk_threads_leave(); }
 };
 
 struct GTKGui::Pimpl
 {
   GTKContext context;
+  boost::asio::io_service& io_service;
   GtkWidget* app_widget;
   GtkWidget* editor_widget;
   GtkWidget* status_bar_widget;
@@ -29,16 +40,17 @@ struct GTKGui::Pimpl
   KeyEventCallback       key_event_callback;
   SCNotificationCallback scnotification_callback;
 
-  Pimpl(int argc, char** argv, GtkWidget* app, GtkWidget* edit, GtkWidget* status, GtkWidget* mini):
-    context(argc, argv), 
+  Pimpl(int argc, char** argv, boost::asio::io_service& the_io_service,
+        GtkWidget* app, GtkWidget* edit, GtkWidget* status, GtkWidget* mini):
+    context(argc, argv), io_service(the_io_service),
     app_widget(app), editor_widget(edit), status_bar_widget(status), mini_buffer_widget(mini),
     key_event_callback(), scnotification_callback()
   {
   }
 };
 
-GTKGui::GTKGui(int argc, char** argv):
-  pimpl_(new Pimpl(argc, argv, nullptr, nullptr, nullptr, nullptr))
+GTKGui::GTKGui(int argc, char** argv, boost::asio::io_service& io_service):
+  pimpl_(new Pimpl(argc, argv, io_service, nullptr, nullptr, nullptr, nullptr))
                    
 {
   pimpl_->app_widget = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -74,7 +86,8 @@ GTKGui::~GTKGui()
 
 void GTKGui::run()
 {
-  gtk_main();
+  //auto lock = GDKThreadLocker();
+  gtk_main();  
 }
 
 void GTKGui::exit()
@@ -84,13 +97,19 @@ void GTKGui::exit()
 
 Gui::ScintillaSender GTKGui::scintillaSender()
 {
-  return std::bind(&scintilla_send_message, 
-                   reinterpret_cast<ScintillaObject*>(pimpl_->editor_widget),
+  return std::bind(&GTKGui::sendMessage, this,
                    std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+
+}
+
+sptr_t GTKGui::sendMessage(unsigned int msg, uptr_t arg1, sptr_t arg2)
+{
+  return scintilla_send_message(reinterpret_cast<ScintillaObject*>(pimpl_->editor_widget), msg, arg1, arg2);
 }
 
 void GTKGui::setMinibufferMessage(const char* message)
 {
+  //auto lock = GDKThreadLocker();
   clearMinibufferMessage();
   gtk_statusbar_push(reinterpret_cast<GtkStatusbar*>(pimpl_->mini_buffer_widget), 0, message);
 }

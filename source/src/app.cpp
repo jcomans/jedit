@@ -4,7 +4,9 @@
 
 App::App(int argc, char** argv):
 
-  gui_(GUIFactory::Create(argc, argv)),
+  io_service_(),
+
+  gui_(GUIFactory::Create(argc, argv, io_service_)),
 
   script_engine_(),
 

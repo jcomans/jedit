@@ -7,19 +7,21 @@
 #include <map>
 #include <memory>
 
+#include <boost/asio.hpp>
+
 #include "gui.hpp"
 
 class GUIFactory
 {
 public:
-  using GUICreator = std::function<GuiPtr(int,char**)>;
+  using GUICreator = std::function<GuiPtr(int,char**,boost::asio::io_service&)>;
 
   static void AddCreator(const char* name, GUICreator creator)
   {
     creator_map()[name] = creator;
   }
 
-  static GuiPtr Create(int argc, char** argv, const char* name="")
+  static GuiPtr Create(int argc, char** argv, boost::asio::io_service& io_service, const char* name="")
   {
     assert(creator_map().size());
 
@@ -27,11 +29,11 @@ public:
 
     if(the_name.size() && creator_map().count(name))
     {
-      return creator_map()[name](argc, argv);
+      return creator_map()[name](argc, argv, io_service);
     }
     else
     {
-      return creator_map().begin()->second(argc, argv);
+      return creator_map().begin()->second(argc, argv, io_service);
     }
   }
 
@@ -51,15 +53,15 @@ struct RegisterGUI
   RegisterGUI(const char* name) 
   { 
     GUIFactory::AddCreator(name, 
-                           [this](int argc, char** argv)
+                           [this](int argc, char** argv, boost::asio::io_service& io_service)
                            {
-                             return this->create(argc, argv);
+                             return this->create(argc, argv, io_service);
                            } ); 
   }
 
-  GuiPtr create(int argc, char** argv) 
+  GuiPtr create(int argc, char** argv, boost::asio::io_service& io_service) 
   { 
-    return std::make_shared<T>(argc, argv); 
+    return std::make_shared<T>(argc, argv, io_service); 
   }
 };
 

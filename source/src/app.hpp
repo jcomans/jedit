@@ -1,6 +1,8 @@
 #ifndef _APP_H_
 #define _APP_H_
 
+#include <boost/asio.hpp>
+
 #include "script_engine.hpp"
 
 #include "editor.hpp"
@@ -25,6 +27,8 @@ public:
   BufferList& buffer_list();
   MiniBuffer& mini_buffer();
 private:
+
+  boost::asio::io_service io_service_;
 
   GuiPtr gui_;
 
