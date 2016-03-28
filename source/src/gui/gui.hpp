@@ -11,6 +11,8 @@ struct KeyEvent
   size_t val;
   size_t state;
   bool   is_mod;
+
+  KeyEvent(size_t v, size_t s, bool m): val(v), state(s), is_mod(m) {}
 };
 
 

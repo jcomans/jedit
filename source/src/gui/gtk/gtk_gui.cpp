@@ -1,18 +1,14 @@
 #include "gtk_gui.hpp"
 
+#include <memory>
+#include <utility>
+
 #include "../gui_factory.hpp"
 
-#include <gtk/gtk.h>
-#include <Scintilla.h>
-#include <ScintillaWidget.h>
+#include <thread>
+#include <iostream>
+using namespace std;
 
-namespace
-{
-int handleExit( GtkWidget* w, GdkEventAny* e, gpointer p );
-int handleKey( GtkWidget* w, GdkEvent* e, gpointer p );
-int handleScintillaMessage( GtkWidget*, gint, SCNotification* notification,
-                            gpointer userData );
-}
 
 struct GTKContext
 {
@@ -32,17 +28,23 @@ struct GDKThreadLocker
 struct GTKGui::Pimpl
 {
   GTKContext context;
+
   boost::asio::io_service& io_service;
+  std::unique_ptr<boost::asio::io_service::work> gui_work;
+
   GtkWidget* app_widget;
   GtkWidget* editor_widget;
   GtkWidget* status_bar_widget;
   GtkWidget* mini_buffer_widget;
+
   KeyEventCallback       key_event_callback;
   SCNotificationCallback scnotification_callback;
 
+
   Pimpl(int argc, char** argv, boost::asio::io_service& the_io_service,
         GtkWidget* app, GtkWidget* edit, GtkWidget* status, GtkWidget* mini):
-    context(argc, argv), io_service(the_io_service),
+    context(argc, argv), 
+    io_service(the_io_service), gui_work(new boost::asio::io_service::work(io_service)),
     app_widget(app), editor_widget(edit), status_bar_widget(status), mini_buffer_widget(mini),
     key_event_callback(), scnotification_callback()
   {
@@ -74,10 +76,10 @@ GTKGui::GTKGui(int argc, char** argv, boost::asio::io_service& io_service):
                      GTK_SIGNAL_FUNC(&handleExit), this);
 
   gtk_signal_connect(GTK_OBJECT(pimpl_->app_widget), "key_press_event",
-                     GTK_SIGNAL_FUNC(&handleKey), &pimpl_->key_event_callback);
+                     GTK_SIGNAL_FUNC(&handleKey), this);
 
   gtk_signal_connect(GTK_OBJECT(pimpl_->editor_widget), "sci-notify",
-                     GTK_SIGNAL_FUNC(&handleScintillaMessage), &pimpl_->scnotification_callback);
+                     GTK_SIGNAL_FUNC(&handleScintillaMessage), this);
 }
 
 GTKGui::~GTKGui()
@@ -86,12 +88,16 @@ GTKGui::~GTKGui()
 
 void GTKGui::run()
 {
-  //auto lock = GDKThreadLocker();
-  gtk_main();  
+  {
+    auto lock = GDKThreadLocker();
+    gtk_main();  
+  }
+  pimpl_->gui_work.reset();
 }
 
 void GTKGui::exit()
 {
+  auto lock = GDKThreadLocker();
   gtk_main_quit();
 }
 
@@ -104,23 +110,26 @@ Gui::ScintillaSender GTKGui::scintillaSender()
 
 sptr_t GTKGui::sendMessage(unsigned int msg, uptr_t arg1, sptr_t arg2)
 {
+  auto lock = GDKThreadLocker();
   return scintilla_send_message(reinterpret_cast<ScintillaObject*>(pimpl_->editor_widget), msg, arg1, arg2);
 }
 
 void GTKGui::setMinibufferMessage(const char* message)
 {
-  //auto lock = GDKThreadLocker();
-  clearMinibufferMessage();
+  auto lock = GDKThreadLocker();
+  gtk_statusbar_remove_all(reinterpret_cast<GtkStatusbar*>(pimpl_->mini_buffer_widget), 0);
   gtk_statusbar_push(reinterpret_cast<GtkStatusbar*>(pimpl_->mini_buffer_widget), 0, message);
 }
 
 void GTKGui::clearMinibufferMessage()
 {
+  auto lock = GDKThreadLocker();
   gtk_statusbar_remove_all(reinterpret_cast<GtkStatusbar*>(pimpl_->mini_buffer_widget), 0);
 }  
 
 void GTKGui::setStatusBar(const char* text)
 {
+  auto lock = GDKThreadLocker();
   gtk_label_set_text(reinterpret_cast<GtkLabel*>(pimpl_->status_bar_widget), text);
 }
 
@@ -145,38 +154,48 @@ bool GTKGui::registerSCNotificationCallback(SCNotificationCallback scncb)
   return false;
 }
 
-namespace
+int GTKGui::handleExit(GtkWidget*w, GdkEventAny*e, gpointer p) 
 {
-  int handleExit(GtkWidget*w, GdkEventAny*e, gpointer p) 
-  {
-    auto the_gui = reinterpret_cast<GTKGui*>(p);
-    the_gui->exit();
-    return 1;
-  }
+  auto the_gui = reinterpret_cast<GTKGui*>(p);
+  the_gui->postExit();
+  return 1;
+}
 
-  int handleKey(GtkWidget*w, GdkEvent* e, gpointer p)
-  {
-    auto gtkkeyevent = reinterpret_cast<GdkEventKey*>(e);
-    
-    auto kecb = *(reinterpret_cast<Gui::KeyEventCallback*>(p));
+int GTKGui::handleKey(GtkWidget*w, GdkEvent* e, gpointer p)
+{
+  auto gtkkeyevent = reinterpret_cast<GdkEventKey*>(e);
+  auto the_gui     = reinterpret_cast<GTKGui*>(p);
 
-    KeyEvent key_event;
-    key_event.val    = gtkkeyevent->keyval;
-    key_event.state  = gtkkeyevent->state;
-    key_event.is_mod = gtkkeyevent->is_modifier;
+  the_gui->postKey(KeyEvent{gtkkeyevent->keyval, gtkkeyevent->state, (gtkkeyevent->is_modifier > 0)});
 
-    return kecb(key_event);
-  }
+  return 1;
+}
 
-  int handleScintillaMessage(GtkWidget *, gint, SCNotification *notification, gpointer p)
-  {
-    auto scncb = *(reinterpret_cast<Gui::SCNotificationCallback*>(p));
+int GTKGui::handleScintillaMessage(GtkWidget *, gint, SCNotification *notification, gpointer p)
+{
+  auto the_gui = reinterpret_cast<GTKGui*>(p);
 
-    if(scncb)
-      return scncb(notification);
-    else
-      return 0;
-  }
+  the_gui->postScintillaMessage(notification);
+
+  return 1;
+}
+
+void GTKGui::postExit()
+{
+  pimpl_->io_service.post(std::bind(&GTKGui::exit, this));
+}
+
+void GTKGui::postKey(KeyEvent ke)
+{
+  if(pimpl_->key_event_callback)
+    pimpl_->io_service.post(std::bind(pimpl_->key_event_callback, ke));
+}
+
+void GTKGui::postScintillaMessage(SCNotification* n)
+{
+
+  if(pimpl_->scnotification_callback)
+    pimpl_->io_service.post(std::bind(pimpl_->scnotification_callback, n));
 }
 
 namespace

@@ -1,4 +1,7 @@
 #include "app.hpp"
+
+#include <thread>
+
 #include "gui/gui_factory.hpp"
 
 
@@ -25,7 +28,9 @@ App::App(int argc, char** argv):
 
 void App::run()
 {
-  gui_->run();
+  auto gui_thread = std::thread(std::bind(&Gui::run, gui_));
+  io_service_.run();
+  gui_thread.join();
 }
 
 void App::exit()
