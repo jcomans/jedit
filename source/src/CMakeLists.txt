@@ -49,3 +49,17 @@ target_link_libraries(jedit
 add_custom_command(TARGET jedit
                    POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:jedit> ${CMAKE_BINARY_DIR})
+
+add_executable(asiotest asiotest.cpp)
+
+target_link_libraries(asiotest
+  scintilla
+  ${GTK2_LIBRARIES}
+  ${PYTHON_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${CMAKE_THREAD_LIBS_INIT}
+  )
+
+add_custom_command(TARGET asiotest
+                   POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:asiotest> ${CMAKE_BINARY_DIR})
