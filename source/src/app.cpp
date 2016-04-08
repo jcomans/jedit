@@ -2,6 +2,8 @@
 
 #include <thread>
 
+#include <boost/log/trivial.hpp>
+
 #include "gui/gui_factory.hpp"
 
 Core::Core(GuiPtr gui):
@@ -35,6 +37,7 @@ void App::run()
 {
   // Start the gui thread
   auto gui_thread = std::thread(std::bind(&Gui::run, gui_));
+  BOOST_LOG_TRIVIAL(debug) << "Started GUI thread";
   // Start processing work
   io_service_.run();
   // After all work is done (on exit) we delete the core before stopping the 
