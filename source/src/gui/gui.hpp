@@ -22,6 +22,7 @@ public:
   virtual ~Gui() {};
 
   virtual void run()  =0;
+  virtual void stop() =0;
   virtual void exit() =0;
 
   // Editor communication

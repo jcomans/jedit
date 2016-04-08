@@ -34,6 +34,7 @@ class BufferList
 {
 public:
   BufferList(SCEditor& editor);
+  ~BufferList();
 
   void init();
 
@@ -45,7 +46,7 @@ public:
 
   void switchBuffer();
 
-  void killBuffer();
+  void killBuffer(bool create_scratch=true);
 
   Buffer& current();
 

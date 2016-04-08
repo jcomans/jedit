@@ -6,8 +6,6 @@
 #include "../gui_factory.hpp"
 
 #include <thread>
-#include <iostream>
-using namespace std;
 
 
 struct GTKContext
@@ -90,9 +88,16 @@ void GTKGui::run()
 {
   {
     auto lock = GDKThreadLocker();
-    gtk_main();  
+    gtk_main();
   }
-  pimpl_->gui_work.reset();
+  
+}
+
+void GTKGui::stop()
+{
+  auto lock = GDKThreadLocker();
+  pimpl_->key_event_callback = KeyEventCallback();
+  pimpl_->gui_work.reset();  
 }
 
 void GTKGui::exit()

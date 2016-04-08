@@ -14,7 +14,7 @@ def start_switch_buffer():
 
 def kill_buffer(scratch):
     
-    buffer_list.kill_buffer()
+    buffer_list.kill_buffer(True)
 
 def start_kill_buffer():
     

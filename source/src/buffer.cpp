@@ -6,10 +6,21 @@
 
 #include "editor.hpp"
 
+#include <boost/log/trivial.hpp>
+
+
 BufferList::BufferList(SCEditor& editor):
   editor_(editor)
 {
   createScratch();
+}
+
+BufferList::~BufferList()
+{
+  while(buffer_list_.size())
+  {
+    killBuffer(false);
+  }
 }
 
 void BufferList::init()
@@ -19,6 +30,7 @@ void BufferList::init()
 
 void BufferList::createScratch()
 {
+  BOOST_LOG_TRIVIAL(debug) << "Creating scratch buffer";
   buffer_list_.emplace_back("*scratch*", "", 
                             editor_.sendMessage(SCI_CREATEDOCUMENT));
   editor_.sendMessage(SCI_SETDOCPOINTER, 0, buffer_list_.back().document());
@@ -32,6 +44,7 @@ void BufferList::findFile(const char* file_name)
     
   if(the_file)
   {
+    BOOST_LOG_TRIVIAL(debug) << "Creating buffer: " << file_name;
     buffer_list_.emplace_back(file_name, file_name,
                               editor_.sendMessage(SCI_CREATEDOCUMENT));
 
@@ -66,17 +79,19 @@ void BufferList::switchBuffer()
   }
 }
 
-void BufferList::killBuffer()
+void BufferList::killBuffer(bool create_scratch)
 {
   if(buffer_list_.size())
   {
     Buffer the_buffer = buffer_list_.back();
+
+    BOOST_LOG_TRIVIAL(debug) << "Killing buffer: " << the_buffer.name();
       
     buffer_list_.pop_back();
       
     if(buffer_list_.size())
       editor_.sendMessage(SCI_SETDOCPOINTER, 0, buffer_list_.back().document());
-    else
+    else if(create_scratch)
       createScratch();
 
     editor_.sendMessage(SCI_RELEASEDOCUMENT, 0, the_buffer.document());      

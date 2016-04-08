@@ -17,6 +17,7 @@ public:
   ~GTKGui();
 
   void run();
+  void stop();
   void exit();
 
   ScintillaSender scintillaSender();

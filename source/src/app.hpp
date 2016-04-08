@@ -13,6 +13,23 @@
 
 #include "gui/gui.hpp"
 
+class Core
+{
+public:
+  Core(GuiPtr gui);
+
+  ScriptEngine script_engine_;
+
+  SCEditor   editor_;
+  MiniBuffer mini_buffer_;
+
+  KeyHandler key_handler_;
+
+  BufferList buffers_;
+};
+
+using CorePtr = std::unique_ptr<Core>;
+
 class App
 {
 public:
@@ -31,15 +48,8 @@ private:
   boost::asio::io_service io_service_;
 
   GuiPtr gui_;
+  CorePtr core_;
 
-  ScriptEngine script_engine_;
-
-  SCEditor   editor_;
-  MiniBuffer mini_buffer_;
-
-  KeyHandler key_handler_;
-
-  BufferList buffers_;
   
 };
 
