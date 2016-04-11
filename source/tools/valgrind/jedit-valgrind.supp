@@ -1,0 +1,165 @@
+{
+   <py_init>
+   Memcheck:Cond
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyImport_ImportFrozenModule
+   ...
+}
+
+{
+   <py_init>
+   Memcheck:Value8
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyImport_ImportFrozenModule
+   ...
+}
+
+{
+   <py_init>
+   Memcheck:Addr4
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyImport_ImportFrozenModule
+   ...
+}
+
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyEval_EvalFrameEx
+   ...
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyEval_EvalFrameEx
+   ...
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Value8
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyEval_EvalFrameEx
+   ...
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyCFunction_Call
+   ...
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyCFunction_Call
+   ...
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Value8
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyCFunction_Call
+   ...
+}
+
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyNode_Free
+   ...
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyRun_FileExFlags
+   ...
+}
+
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyTuple_New
+   ...
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyAST_CompileObject
+   ...
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:PyImport_Cleanup
+   ...
+}
+
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:Py_Finalize
+   ...
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Value8
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:Py_Finalize
+   ...
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib/libpython3.5m.so.1.0
+   ...
+   fun:Py_Finalize
+   ...
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   obj:/usr/lib/gtk-2.0/2.10.0/engines/libpixmap.so
+   ...
+   fun:g_signal_emit
+   ...
+}
