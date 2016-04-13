@@ -1,6 +1,6 @@
 import jedit
 
-import util
+import minibuffer
 
 import os
 
@@ -12,7 +12,7 @@ def find_file(name):
 
 def start_find_file():
 
-    util.start_minibuf_capture(find_file, complete_filename)
+    minibuffer.start_minibuf_capture(find_file, complete_filename)
 
     mini_buffer.start_capture("Find file: ")
     mini_buffer.set_dynamic('./')
@@ -27,6 +27,11 @@ def complete_filename():
 
     completions = [ i for i in entries if i[0:len(part)] == part ]
 
-    prefix = os.path.commonprefix(completions)
+    if len(completions):
 
-    mini_buffer.set_dynamic(os.path.join(directory, prefix))
+        prefix = os.path.commonprefix(completions)
+
+        mini_buffer.set_dynamic(os.path.join(directory, prefix))
+
+
+

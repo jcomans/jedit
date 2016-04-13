@@ -1,5 +1,5 @@
 import jedit
-import util
+import minibuffer
 
 buffer_list = jedit.buffer_list()
 
@@ -18,7 +18,7 @@ def kill_buffer(scratch):
 
 def start_kill_buffer():
     
-    util.start_minibuf_capture(kill_buffer, None)
+    minibuffer.start_minibuf_capture(kill_buffer, None)
 
     buffer_name = buffer_list.current().name()
 

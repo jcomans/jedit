@@ -36,15 +36,15 @@ void BufferList::createScratch()
 
 void BufferList::findFile(const char* file_name)
 {
+  buffer_list_.emplace_back(file_name, file_name,
+                            editor_.sendMessage(SCI_CREATEDOCUMENT));
+
+  editor_.sendMessage(SCI_SETDOCPOINTER, 0, buffer_list_.back().document());
+
   auto the_file = std::ifstream(file_name);
     
   if(the_file)
   {
-    buffer_list_.emplace_back(file_name, file_name,
-                              editor_.sendMessage(SCI_CREATEDOCUMENT));
-
-    editor_.sendMessage(SCI_SETDOCPOINTER, 0, buffer_list_.back().document());
-
     auto content = std::string( std::istreambuf_iterator<char>(the_file),
                                 std::istreambuf_iterator<char>() );
 
