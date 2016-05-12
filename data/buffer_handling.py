@@ -8,7 +8,7 @@ def switch_buffer(scratch):
 
 def start_switch_buffer():
     
-    util.start_minibuf_capture(switch_buffer, None)
+    minibuffer.start_minibuf_capture(switch_buffer, None)
 
     jedit.mini_buffer().start_capture("Switch buffer?");
 

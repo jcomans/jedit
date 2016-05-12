@@ -1,5 +1,7 @@
 #include "script_engine.hpp"
 
+#include <boost/log/trivial.hpp>
+
 #include "app.hpp"
 
 #include "python/python_modules.hpp"
@@ -85,7 +87,10 @@ bool ScriptEngine::handle(const char* cmd)
   catch(py::error_already_set)
   {
     PyErr_Print();
-    return false;
+
+    py::handle_exception();
+    PyErr_Clear();
+
   }
   return true;
 }
