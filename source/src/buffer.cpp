@@ -59,7 +59,7 @@ void BufferList::saveFile()
   std::vector<char> buffer(len+1);
   editor_.sendMessage(SCI_GETTEXT, buffer.size(), &buffer[0]);
 
-  auto the_file = std::ofstream(buffer_list_.back().filePath());
+  auto the_file = std::ofstream(current().filePath());
   the_file.write(&buffer[0], len);
 
   editor_.sendMessage(SCI_SETSAVEPOINT);
@@ -70,7 +70,7 @@ void BufferList::switchBuffer()
   if(buffer_list_.size() > 1)
   {
     std::iter_swap(buffer_list_.rbegin(), buffer_list_.rbegin()+1);
-    editor_.sendMessage(SCI_SETDOCPOINTER, 0, buffer_list_.back().document());
+    editor_.sendMessage(SCI_SETDOCPOINTER, 0, current().document());
   }
 }
 
@@ -78,7 +78,7 @@ void BufferList::killBuffer(bool create_scratch)
 {
   if(buffer_list_.size())
   {
-    Buffer the_buffer = buffer_list_.back();
+    Buffer& the_buffer = current();
       
     buffer_list_.pop_back();
       

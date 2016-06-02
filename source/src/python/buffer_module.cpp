@@ -20,10 +20,14 @@ void exportBuffer()
     def("current"       , &BufferList::current, return_value_policy<reference_existing_object>());
 
   bool (Buffer::*p_modified)() const = &Buffer::modified;
+  void (Buffer::*p_set_mark)(size_t) = &Buffer::mark;
+  size_t (Buffer::*p_get_mark)() const = &Buffer::mark;
 
   class_<Buffer>("Buffer", no_init).
     def("name", &Buffer::name ).
     def("file_path", &Buffer::filePath ).
-    def("modified", p_modified);
+    def("modified", p_modified).
+    def("get_mark", p_get_mark).
+    def("set_mark", p_set_mark);
     
 }

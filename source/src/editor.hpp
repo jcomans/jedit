@@ -17,6 +17,8 @@ public:
   const char* getText();
 
   unsigned int currentPos();
+  
+  void setCurrentPos(unsigned int pos);
 
   void setFont(const char* font_name);
 

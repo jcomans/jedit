@@ -28,6 +28,11 @@ unsigned int SCEditor::currentPos()
   return static_cast<unsigned int>(sendMessage(SCI_GETCURRENTPOS));
 }
 
+void SCEditor::setCurrentPos(unsigned int pos)
+{
+  sendMessage(SCI_GOTOPOS, pos);
+}
+
 void SCEditor::setFont(const char* font_name)
 {
   sendMessage(SCI_STYLESETFONT, STYLE_DEFAULT, font_name);

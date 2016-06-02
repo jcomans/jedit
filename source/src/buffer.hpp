@@ -8,11 +8,13 @@ class SCEditor;
 
 #include <Scintilla.h>
 
+#include <boost/log/trivial.hpp>
+
 class Buffer
 {
 public:
   Buffer(const std::string& nm="", const std::string& fp="", sptr_t doc=0):
-    name_(nm), file_path_(fp), document_(doc), modified_(false)
+    name_(nm), file_path_(fp), document_(doc), modified_(false), mark_(1)
   {
   }
 
@@ -23,11 +25,15 @@ public:
   bool modified() const { return modified_; }
   void modified(bool is_modified) { modified_ = is_modified; }
 
+  size_t mark() const { return mark_; }
+  void   mark(size_t mark) { mark_ = mark; }
+
 private:
   std::string name_;
   std::string file_path_;
   sptr_t      document_;
   bool        modified_;
+  size_t      mark_;
 };
 
 class BufferList

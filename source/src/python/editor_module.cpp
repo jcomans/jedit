@@ -17,6 +17,8 @@ void exportEditor()
     def("set_caret_style" , &SCEditor::setCaretStyle ).
     def("add_text"        , &SCEditor::addText       ).
     def("insert_char"     , &SCEditor::insertChar    ).
+    def("get_pos"         , &SCEditor::currentPos    ).
+    def("set_pos"         , &SCEditor::setCurrentPos ).
 
     def("next_line"       , &SCEditor::nextLine      ).
     def("previous_line"   , &SCEditor::previousLine  ).
