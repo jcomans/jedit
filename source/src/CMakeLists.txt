@@ -12,6 +12,8 @@ set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -pg")
 set(Python_ADDITIONAL_VERSIONS 3.4)
 find_package(PythonLibs REQUIRED)
 
+set(Boost_DEBUG ON)
+set(Boost_DETAILED_FAILURE_MSG ON)
 set(BOOST_LIBRARYDIR /usr/lib/x86_64-linux-gnu)
 find_package(Boost 1.50 COMPONENTS program_options system python3 log log_setup)
 find_package(Threads)
