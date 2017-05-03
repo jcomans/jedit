@@ -13,15 +13,18 @@ include_directories(
 
 add_definitions(-DGTK -DSCI_LEXER)
 
+set(CMAKE_CXX_STANDARD 11)
+
 set(CMAKE_C_FLAGS_RELEASE   "-DNDEBUG -Os -Wall -pedantic")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} --std=c++11")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
 
 set(CMAKE_C_FLAGS_DEBUG   "-g -pg -Wall -pedantic")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} --std=c++11")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_C_FLAGS_RELEASE}")
 
 set(scintilla_SRC
   gtk/ScintillaGTK.cxx
   gtk/PlatGTK.cxx
+  gtk/ScintillaGTKAccessible.cxx
   gtk/scintilla-marshal.c
 
   lexlib/LexerModule.cxx

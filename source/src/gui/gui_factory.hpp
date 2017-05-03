@@ -23,7 +23,7 @@ public:
 
   static GuiPtr Create(int argc, char** argv, boost::asio::io_service& io_service, const char* name="")
   {
-    assert(creator_map().size());
+    // assert(creator_map().size());
 
     auto the_name = std::string{name};
 
