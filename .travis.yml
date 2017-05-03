@@ -7,7 +7,7 @@ compiler:
   - clang
 
 before_install:
-  - sudo apt-get install libboost-dev
+  - sudo apt-get install libboost-all-dev
   - sudo apt-get install libgtk2.0-dev
 
 script:
