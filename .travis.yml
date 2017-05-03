@@ -7,6 +7,7 @@ compiler:
   - clang
 
 before_install:
+  - sudo apt-get install python3-dev
   - sudo apt-get install libboost-all-dev
   - sudo apt-get install libgtk2.0-dev
 
@@ -14,7 +15,7 @@ script:
   # Check versions of gcc, g++ and cmake
   - clang --version && clang++ --version && cmake --version
   # Run your build commands next
-  - ls /usr/lib
+  - sudo ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py34.so /usr/lib/x86_64-linux-gnu/libboost_python3.so
   - ls /usr/lib/x86_64-linux-gnu
   - cd build
   - CC=clang CXX=clang++ cmake ../source
