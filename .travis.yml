@@ -14,6 +14,7 @@ script:
   # Check versions of gcc, g++ and cmake
   - clang --version && clang++ --version && cmake --version
   # Run your build commands next
+  - ls /usr/include/boost
   - cd build
   - CC=clang CXX=clang++ cmake ../source
   - make
