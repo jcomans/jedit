@@ -6,14 +6,15 @@
 #include <gtk/gtk.h>
 
 #include <boost/asio.hpp>
-#include <boost/asio/system_timer.hpp>
+#include <boost/asio/basic_waitable_timer.hpp>
 
 GtkWidget* label;
 
 boost::asio::io_service*       the_io_service;
 boost::asio::io_service::work* gtk_work;
 
-boost::asio::system_timer* timer;
+typedef boost::asio::basic_waitable_timer<std::chrono::system_clock> chrono_timer;
+chrono_timer* timer;
 
 using Callback = std::function<void()>;
 
@@ -97,7 +98,7 @@ int main(int argc, char** argv)
 
   
   the_io_service = new boost::asio::io_service();
-  timer          = new boost::asio::system_timer(*the_io_service);
+  timer          = new chrono_timer(*the_io_service);
   gtk_work       = new boost::asio::io_service::work(*the_io_service);
 
   auto gtk_thread = std::thread(&start);
