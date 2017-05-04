@@ -13,7 +13,7 @@ set(Python_ADDITIONAL_VERSIONS 3.4)
 find_package(PythonLibs REQUIRED)
 
 set(BOOST_LIBRARYDIR /usr/lib/x86_64-linux-gnu)
-find_package(Boost 1.50 REQUIRED COMPONENTS program_options system python3 log log_setup)
+find_package(Boost 1.50 REQUIRED COMPONENTS program_options system python3 log log_setup thread)
 find_package(Threads)
 find_package(GTK2)
 
