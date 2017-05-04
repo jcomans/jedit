@@ -59,7 +59,7 @@ void BufferList::saveFile()
   std::vector<char> buffer(len+1);
   editor_.sendMessage(SCI_GETTEXT, buffer.size(), &buffer[0]);
 
-  auto the_file = std::ofstream(current().filePath());
+  std::ofstream the_file{ current().filePath() };
   the_file.write(&buffer[0], len);
 
   editor_.sendMessage(SCI_SETSAVEPOINT);
