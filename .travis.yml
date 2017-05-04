@@ -16,7 +16,6 @@ script:
   - clang --version && clang++ --version && cmake --version
   # Run your build commands next
   - sudo ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py34.so /usr/lib/x86_64-linux-gnu/libboost_python3.so
-  - ls /usr/lib/x86_64-linux-gnu
   - cd build
   - CC=clang CXX=clang++ cmake ../source
   - make

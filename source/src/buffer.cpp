@@ -41,7 +41,7 @@ void BufferList::findFile(const char* file_name)
 
   editor_.sendMessage(SCI_SETDOCPOINTER, 0, buffer_list_.back().document());
 
-  auto the_file{ std::ifstream(file_name) };
+  std::ifstream the_file{ file_name };
     
   if(the_file)
   {
